@@ -1,11 +1,20 @@
 import React, { useState, useRef } from 'react';
 
 interface ImageUploaderProps {
+  id: string;
+  label: string;
   onImageSelect: (base64: string) => void;
   selectedImage: string | null;
+  helpText?: string;
 }
 
-export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageSelect, selectedImage }) => {
+export const ImageUploader: React.FC<ImageUploaderProps> = ({ 
+  id, 
+  label, 
+  onImageSelect, 
+  selectedImage,
+  helpText = "PNG, JPG up to 10MB"
+}) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
 
@@ -48,7 +57,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageSelect, sel
   return (
     <div className="w-full mb-6">
       <label className="block text-sm font-medium text-slate-300 mb-2">
-        1. Upload Reference Photo
+        {label}
       </label>
       <div
         className={`relative w-full h-64 border-2 border-dashed rounded-xl transition-all duration-300 ease-in-out flex flex-col items-center justify-center overflow-hidden cursor-pointer group
@@ -65,7 +74,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageSelect, sel
           <>
             <img 
               src={selectedImage} 
-              alt="Reference" 
+              alt="Upload Preview" 
               className="w-full h-full object-contain z-10 p-2" 
             />
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20 text-white font-medium">
@@ -78,11 +87,12 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageSelect, sel
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             <p className="text-slate-300 font-medium">Click to upload or drag and drop</p>
-            <p className="text-slate-500 text-sm mt-1">PNG, JPG up to 10MB</p>
+            <p className="text-slate-500 text-sm mt-1">{helpText}</p>
           </div>
         )}
         <input
           ref={fileInputRef}
+          id={id}
           type="file"
           className="hidden"
           accept="image/*"
