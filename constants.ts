@@ -36,7 +36,7 @@ export const PRESETS: PresetScenario[] = [
     name: 'Cozy Home',
     description: 'Relaxed indoor, bright living room.',
     promptModifier: 'Relaxed indoor portrait, sitting in a bright sunlit living room, soft daylight filling the room, comfortable casual clothes, intimate and welcoming atmosphere, natural pose, photorealistic.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1585110396063-7a1a04276314?w=150&h=150&fit=crop&q=80'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1687946628944-67265aca2b07?w=150&h=150&fit=crop&q=80'
   },
   {
     id: 'bright_beach',
@@ -50,7 +50,7 @@ export const PRESETS: PresetScenario[] = [
     name: 'Rainy Window',
     description: 'Melancholic, rain drops, soft mood.',
     promptModifier: 'Portrait through a rainy window, rain droplets on glass, soft moody lighting, blue and grey tones, contemplative expression, cozy indoor atmosphere, cinematic depth of field.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1515536269745-03655dc47706?w=150&h=150&fit=crop&q=80'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1571631991440-7c337530733e?w=150&h=150&fit=crop&q=80'
   },
   {
     id: 'winter_snow',
@@ -64,7 +64,7 @@ export const PRESETS: PresetScenario[] = [
     name: 'Autumn Park',
     description: 'Fall colors, leaves, sweater.',
     promptModifier: 'Portrait in an autumn park, surrounded by orange and yellow leaves, wearing a cozy knit sweater, soft diffused light, warm fall color palette, depth of field.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1509561013331-428f44806955?w=150&h=150&fit=crop&q=80'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1671780167950-9d4e6a92b31d?w=150&h=150&fit=crop&q=80'
   },
   {
     id: 'library_study',
@@ -85,7 +85,7 @@ export const PRESETS: PresetScenario[] = [
     name: 'Chef/Cooking',
     description: 'Apron, kitchen, preparing food.',
     promptModifier: 'Portrait in a bright kitchen, wearing a chef apron, fresh ingredients in background, warm lighting, culinary lifestyle photography, authentic and engaging.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1556910103-1c02745a30bf?w=150&h=150&fit=crop&q=80'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=150&h=150&fit=crop&q=80'
   },
   {
     id: 'garden_flowers',
@@ -150,7 +150,7 @@ export const PRESETS: PresetScenario[] = [
     name: 'TED Talk Speaker',
     description: 'On stage, spotlight, microphone.',
     promptModifier: 'Portrait speaking on a conference stage, dark background with stage spotlights, wearing a headset microphone, smart casual, passionate and engaging expression.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1475721027760-f75b49e94980?w=150&h=150&fit=crop&q=80'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1563807894768-f28bee0d37b6?w=150&h=150&fit=crop&q=80'
   },
 
   // --- Artistic & Studio ---
@@ -166,7 +166,7 @@ export const PRESETS: PresetScenario[] = [
     name: 'Vintage Film',
     description: 'Analog look, grain, nostalgic.',
     promptModifier: 'Vintage film photography style, Kodak Portra 400 aesthetic, soft film grain, nostalgic color palette, flash photography look, candid moment, retro vibe.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1555896569-55d8d01495d2?w=150&h=150&fit=crop&q=80'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1625446540672-acdd9397fccb?w=150&h=150&fit=crop&q=80'
   },
   {
     id: 'rembrandt',
@@ -180,7 +180,7 @@ export const PRESETS: PresetScenario[] = [
     name: 'Neon Noir',
     description: 'Dark, pink/blue neon lights.',
     promptModifier: 'Neon noir portrait, illuminated by pink and blue neon signs, dark rainy street background, wet reflections, dramatic shadows, cinematic and moody.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1504384308090-c54be3852f33?w=150&h=150&fit=crop&q=80'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1698614083129-15e976a503fe?w=150&h=150&fit=crop&q=80'
   },
   {
     id: 'double_exposure',
@@ -201,7 +201,7 @@ export const PRESETS: PresetScenario[] = [
     name: 'Pastel Dream',
     description: 'Soft pink/blue, dreamy, airy.',
     promptModifier: 'Soft pastel aesthetic portrait, shades of pale pink and baby blue, dreamy diffused lighting, ethereal atmosphere, soft focus edges, romantic and gentle.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1516575334481-f85287c2c81d?w=150&h=150&fit=crop&q=80'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1658003937179-9b11cd675d99?w=150&h=150&fit=crop&q=80'
   },
   {
     id: 'silhouette',
@@ -217,7 +217,7 @@ export const PRESETS: PresetScenario[] = [
     name: '1920s Gatsby',
     description: 'Art Deco, glamour, b&w or sepia.',
     promptModifier: '1920s Great Gatsby style portrait, vintage evening wear, art deco background, soft focus, black and white or sepia tone, glamorous and opulent.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1514161564558-e6760b825734?w=150&h=150&fit=crop&q=80'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1583325722036-7003a1daa251?w=150&h=150&fit=crop&q=80'
   },
   {
     id: '1950s_diner',
@@ -231,21 +231,21 @@ export const PRESETS: PresetScenario[] = [
     name: '80s Retro',
     description: 'Neon, workout gear, VHS style.',
     promptModifier: '1980s retro portrait, bright neon clothing or windbreaker, VHS tape artifact effect, studio backdrop with lasers, fun and nostalgic.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1545315003-c5ad672cc1d4?w=150&h=150&fit=crop&q=80'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1684402363285-1ef2ff8c45b8?w=150&h=150&fit=crop&q=80'
   },
   {
     id: 'victorian',
     name: 'Victorian Era',
     description: 'Formal, corset/suit, antique.',
     promptModifier: 'Victorian era portrait, wearing formal period clothing (suit or gown), antique photography style, sepia or desaturated colors, stern or formal expression, oval vignette.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1520962889616-562633339a9e?w=150&h=150&fit=crop&q=80'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1646189985810-b2adb304d18f?w=150&h=150&fit=crop&q=80'
   },
   {
     id: 'western_cowboy',
     name: 'Western',
     description: 'Cowboy hat, desert, rustic.',
     promptModifier: 'Western style portrait, wearing a cowboy hat and denim/leather, desert landscape background, warm sunlight, rugged and adventurous look.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1535581652167-3d6b9ca83747?w=150&h=150&fit=crop&q=80'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1683741173915-a9711b0e7fe2?w=150&h=150&fit=crop&q=80'
   },
 
   // --- Fantasy & Sci-Fi ---
@@ -254,14 +254,14 @@ export const PRESETS: PresetScenario[] = [
     name: 'Cyberpunk',
     description: 'Futuristic city, neon, tech.',
     promptModifier: 'Cyberpunk style, neon lights reflecting on face, futuristic night city background, vibrant cyan and magenta colors, high tech clothing or cybernetics, cinematic.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1615818451881-26f27e270319?w=150&h=150&fit=crop&q=80'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1677097608923-a0c4645775cd?w=150&h=150&fit=crop&q=80'
   },
   {
     id: 'medieval_knight',
     name: 'Medieval Knight',
     description: 'Armor, castle, dramatic.',
     promptModifier: 'Medieval fantasy portrait, wearing intricate plate armor or chainmail, castle or battlefield background, dramatic lighting, heroic and epic atmosphere.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1598556776374-205475eb295d?w=150&h=150&fit=crop&q=80'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1657954563624-25c38c199f3b?w=150&h=150&fit=crop&q=80'
   },
   {
     id: 'elven_fantasy',
@@ -275,7 +275,7 @@ export const PRESETS: PresetScenario[] = [
     name: 'Astronaut',
     description: 'Space suit, stars, sci-fi.',
     promptModifier: 'Sci-fi astronaut portrait, wearing a futuristic space suit, stars and nebula in background, cool blue lighting, reflection in visor, cinematic space movie style.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1454789548728-85d2696cf6a0?w=150&h=150&fit=crop&q=80'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1541873676-a18131494184?w=150&h=150&fit=crop&q=80'
   },
   {
     id: 'steampunk',
@@ -289,7 +289,7 @@ export const PRESETS: PresetScenario[] = [
     name: 'Wizard/Witch',
     description: 'Robes, magic, dark mood.',
     promptModifier: 'Fantasy wizard or witch portrait, wearing dark hooded robes, holding a glowing staff or orb, magical library or dark forest background, mysterious lighting.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1519340241574-2291ec3a05b9?w=150&h=150&fit=crop&q=80'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1698074220225-0ef86ac1d7f6?w=150&h=150&fit=crop&q=80'
   },
   {
     id: 'zombie_apocalypse',
@@ -305,7 +305,7 @@ export const PRESETS: PresetScenario[] = [
     promptModifier: 'Cinematic superhero portrait, wearing a custom superhero suit with emblem, overlooking a city skyline at night, dramatic rim lighting, heroic pose.',
     thumbnailUrl: 'https://images.unsplash.com/photo-1558507652-2d9626c4e67a?w=150&h=150&fit=crop&q=80'
   },
-  
+
   // --- Event & Formal ---
   {
     id: 'red_carpet',
@@ -326,7 +326,7 @@ export const PRESETS: PresetScenario[] = [
     name: 'Royal Portrait',
     description: 'Crown, throne, painting style.',
     promptModifier: 'Regal royal portrait, wearing a crown and velvet robes, sitting on a throne or in a palace hall, oil painting style, majestic and powerful.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1597955485988-f427186428d1?w=150&h=150&fit=crop&q=80'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1677537946831-4590ff82359c?w=150&h=150&fit=crop&q=80'
   },
 
   // --- Cinematic Styles ---
@@ -363,7 +363,7 @@ export const PRESETS: PresetScenario[] = [
     name: '3D Animation',
     description: 'Cute, 3D render, soft.',
     promptModifier: '3D animated movie style (Pixar/Disney), cute and expressive features, soft render, bright colors, friendly and charming character design.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1633278644256-102d805473e0?w=150&h=150&fit=crop&q=80'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1637416067365-2b5e7e8fe8fa?w=150&h=150&fit=crop&q=80'
   },
   {
     id: 'oil_painting',
@@ -378,5 +378,60 @@ export const PRESETS: PresetScenario[] = [
     description: 'Soft, dripping, paper texture.',
     promptModifier: 'Watercolor painting style, soft bleeding colors, white paper texture background, artistic splashes, delicate and dreamy.',
     thumbnailUrl: 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?w=150&h=150&fit=crop&q=80'
+  }
+];
+
+export const KIDS_PRESETS: PresetScenario[] = [
+  // --- Realistic Kids ---
+  {
+    id: 'kids_sunny_park',
+    name: 'Sunny Park',
+    description: 'Bright, playful, outdoor fun.',
+    promptModifier: 'Happy child portrait in a sunny park, bright natural sunlight, colorful playground background, playful and energetic vibe, laughing expression, high quality photography.',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1519340241574-2cec6aef0c01?w=150&h=150&fit=crop&q=80'
+  },
+  {
+    id: 'kids_studio_soft',
+    name: 'Studio Soft',
+    description: 'Clean, innocent, high-key.',
+    promptModifier: 'Professional studio portrait of a child, soft high-key lighting, white or light pastel background, innocent and sweet expression, sharp focus on eyes, angelic look.',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1722219139994-b52fe7246b79?w=150&h=150&fit=crop&q=80'
+  },
+  {
+    id: 'kids_birthday',
+    name: 'Birthday Fun',
+    description: 'Balloons, party, colorful.',
+    promptModifier: 'Birthday party portrait, child surrounded by colorful balloons and confetti, wearing a party hat, bright and festive lighting, joyful celebration atmosphere.',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1763634708735-003d172bf637?w=150&h=150&fit=crop&q=80'
+  },
+
+  // --- Artistic Kids ---
+  {
+    id: 'kids_3d_animation',
+    name: '3D Animation',
+    description: 'Pixar style, cute, round.',
+    promptModifier: '3D animated movie style (Pixar/Disney) portrait of a child, cute big eyes, round features, soft render, vibrant colors, friendly and charming character design.',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=150&h=150&fit=crop&q=80'
+  },
+  {
+    id: 'kids_storybook',
+    name: 'Storybook',
+    description: 'Watercolor, dreamy, soft.',
+    promptModifier: 'Children\'s storybook illustration style, soft watercolor and ink, dreamy pastel colors, magical atmosphere, whimsical and gentle.',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=150&h=150&fit=crop&q=80'
+  },
+  {
+    id: 'kids_anime',
+    name: 'Cute Anime',
+    description: 'Big eyes, chibi, vibrant.',
+    promptModifier: 'Cute anime style portrait of a child, large expressive eyes, vibrant colors, chibi-esque proportions, sparkling background, kawaii aesthetic.',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1560942485-b2a11cc13456?w=150&h=150&fit=crop&q=80'
+  },
+  {
+    id: 'kids_superhero',
+    name: 'Little Hero',
+    description: 'Cape, brave, fun.',
+    promptModifier: 'Child dressed as a superhero with a cape, standing bravely on a rooftop (safe looking), dramatic but fun lighting, comic book movie style, heroic pose.',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=150&h=150&fit=crop&q=80'
   }
 ];

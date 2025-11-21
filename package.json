@@ -4,18 +4,21 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"node server.js\" \"vite\"",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@google/genai": "^1.30.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "@google/genai": "^1.30.0"
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
+    "concurrently": "^9.2.1",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"
   }
