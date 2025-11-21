@@ -69,10 +69,26 @@
 
 3. **Configure API Key**
    
-   Create a `.env` file in the root directory:
+   > [!IMPORTANT]
+   > You need to configure your Gemini API key before running the application.
+   
+   The repository includes a `.env.local` template file. Follow these steps:
+   
+   a. Fill in your API key in `.env.local`:
    ```env
-   GEMINI_API_KEY=your_gemini_api_key_here
+   GEMINI_API_KEY=your_actual_api_key_here
    ```
+   
+   b. Rename the file from `.env.local` to `.env`:
+   ```bash
+   # On Windows
+   ren .env.local .env
+   
+   # On macOS/Linux
+   mv .env.local .env
+   ```
+   
+   Get your API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
 
 4. **Start the application**
    ```bash
@@ -186,10 +202,26 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 3. **配置 API 密钥**
    
-   在根目录创建 `.env` 文件：
+   > [!IMPORTANT]
+   > 在运行应用之前，您需要配置 Gemini API 密钥。
+   
+   仓库中包含了一个 `.env.local` 模板文件。请按以下步骤操作：
+   
+   a. 在 `.env.local` 文件中填入您的 API 密钥：
    ```env
-   GEMINI_API_KEY=你的_gemini_api_密钥
+   GEMINI_API_KEY=你的实际api密钥
    ```
+   
+   b. 将文件从 `.env.local` 重命名为 `.env`：
+   ```bash
+   # Windows 系统
+   ren .env.local .env
+   
+   # macOS/Linux 系统
+   mv .env.local .env
+   ```
+   
+   从 [Google AI Studio](https://aistudio.google.com/app/apikey) 获取您的 API 密钥。
 
 4. **启动应用**
    ```bash
