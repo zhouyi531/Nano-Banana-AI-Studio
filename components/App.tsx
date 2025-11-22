@@ -3,12 +3,14 @@ import { ImageUploader } from './ImageUploader';
 import { PresetSelector } from './PresetSelector';
 import { HistoryGallery } from './HistoryGallery';
 import { generatePortrait } from '../services/geminiService';
-import { AspectRatio, PresetScenario, AppMode, HistoryItem, FashionParams, AgeTransformParams, HairstyleParams, TattooParams, PhotographyParams } from '../types';
+import { AspectRatio, PresetScenario, AppMode, HistoryItem, FashionParams, AgeTransformParams, HairstyleParams, TattooParams, PhotographyParams, PoseParams, SceneGenParams } from '../types';
 import { FashionControls } from './FashionControls';
 import { AgeControls } from './AgeControls';
 import { HairstyleControls } from './HairstyleControls';
 import { TattooControls } from './TattooControls';
 import { PhotographyControls } from './PhotographyControls';
+import { PoseControls } from './PoseControls';
+import { SceneGenControls } from './SceneGenControls';
 import { ASPECT_RATIOS } from '../constants';
 
 const getRatioIconClass = (ratio: string) => {
@@ -72,6 +74,41 @@ const App: React.FC = () => {
     iso: '100',
     shutterSpeed: '250',
     lensType: 'prime'
+  });
+  const [poseParams, setPoseParams] = useState<PoseParams>({
+    poseReferenceImage: undefined,
+    selectedPreset: undefined
+  });
+  const [sceneGenParams, setSceneGenParams] = useState<SceneGenParams>({
+    characterAge: 22,
+    characterType: 'young_woman',
+    ethnicity: 'east_asian',
+    eyeSize: 'large',
+    skinTone: 'fair',
+    expression: 'shy_smile',
+    gazeDirection: 'at_camera',
+    bodyPose: 'standing',
+    bodyOrientation: 'facing_forward',
+    headDirection: 'forward',
+    action: 'static',
+    topType: 'tshirt',
+    topColor: 'white',
+    topStyle: 'short_sleeve',
+    bottomType: 'jeans',
+    bottomStyle: 'casual',
+    shoesType: 'sneakers',
+    shoesColor: 'white',
+    locationType: 'park',
+    surface: 'grass',
+    props: [],
+    cameraAngle: 'eye_level',
+    shotType: 'medium_shot',
+    photoStyle: 'candid',
+    quality: '4k',
+    lightingType: 'natural',
+    timeOfDay: 'afternoon',
+    weather: 'sunny',
+    atmosphere: 'casual'
   });
 
   // Load history from server on mount
@@ -158,7 +195,9 @@ const App: React.FC = () => {
         ageParams,
         hairstyleParams,
         tattooParams,
-        photographyParams
+        photographyParams,
+        poseParams,
+        sceneGenParams
       );
 
       // Save to local server
@@ -385,9 +424,33 @@ const App: React.FC = () => {
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
                       }`}
                   >
-                    <div className="flex flex-col items-center">
+                    <div className="flex flexcol items-center">
                       <span className="text-base mb-0.5">📷</span>
                       <span className="text-xs">Photography</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setMode('pose_transfer'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'pose_transfer'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">🤸</span>
+                      <span className="text-xs">Pose</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setMode('scene_gen'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'scene_gen'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">🎬</span>
+                      <span className="text-xs">网红</span>
                     </div>
                   </button>
                 </div>
@@ -623,6 +686,27 @@ const App: React.FC = () => {
                       />
                     </div>
                   </>
+                ) : mode === 'pose_transfer' ? (
+                  <>
+                    {/* Pose Transfer Mode Controls */}
+                    <div className="mb-8">
+                      <PoseControls
+                        poseParams={poseParams}
+                        onChange={setPoseParams}
+                        onPoseReferenceChange={(img) => setTargetImage(img)}
+                      />
+                    </div>
+                  </>
+                ) : mode === 'scene_gen' ? (
+                  <>
+                    {/* Scene Generator Mode Controls */}
+                    <div className="mb-8">
+                      <SceneGenControls
+                        sceneGenParams={sceneGenParams}
+                        onChange={setSceneGenParams}
+                      />
+                    </div>
+                  </>
                 ) : (
                   <>
                     {/* Fashion Studio Mode Controls */}
@@ -651,11 +735,11 @@ const App: React.FC = () => {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      {mode === 'portrait' ? 'Generating...' : mode === 'faceswap' ? 'Swapping Face...' : mode === 'age_transform' ? 'Transforming Age...' : mode === 'hairstyle' ? 'Changing Hairstyle...' : mode === 'tattoo' ? 'Creating Tattoo Preview...' : mode === 'photography' ? 'Generating Photo...' : 'Converting...'}
+                      {mode === 'portrait' ? 'Generating...' : mode === 'faceswap' ? 'Swapping Face...' : mode === 'age_transform' ? 'Transforming Age...' : mode === 'hairstyle' ? 'Changing Hairstyle...' : mode === 'tattoo' ? 'Creating Tattoo Preview...' : mode === 'photography' ? 'Generating Photo...' : mode === 'pose_transfer' ? 'Transferring Pose...' : mode === 'scene_gen' ? 'Generating Scene...' : 'Converting...'}
                     </>
                   ) : (
                     <>
-                      <span className="mr-2">✨</span> {mode === 'portrait' ? 'Generate Portrait' : mode === 'faceswap' ? 'Swap Face' : mode === 'style_transfer' ? 'Convert Style' : mode === 'age_transform' ? 'Transform Age' : mode === 'hairstyle' ? 'Change Hairstyle' : mode === 'tattoo' ? 'Preview Tattoo' : mode === 'photography' ? 'Generate Photo' : 'Create Look'}
+                      <span className="mr-2">✨</span> {mode === 'portrait' ? 'Generate Portrait' : mode === 'faceswap' ? 'Swap Face' : mode === 'style_transfer' ? 'Convert Style' : mode === 'age_transform' ? 'Transform Age' : mode === 'hairstyle' ? 'Change Hairstyle' : mode === 'tattoo' ? 'Preview Tattoo' : mode === 'photography' ? 'Generate Photo' : mode === 'pose_transfer' ? 'Transfer Pose' : mode === 'scene_gen' ? 'Generate Scene' : 'Create Look'}
                     </>
                   )}
                 </button>
@@ -737,10 +821,10 @@ const App: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div >
         )}
-      </main>
-    </div>
+      </main >
+    </div >
   );
 };
 

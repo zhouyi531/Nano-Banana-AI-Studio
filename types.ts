@@ -6,7 +6,7 @@ export enum AspectRatio {
   Ratio_16_9 = '16:9',
 }
 
-export type AppMode = 'portrait' | 'faceswap' | 'style_transfer' | 'fashion' | 'age_transform' | 'hairstyle' | 'tattoo' | 'photography';
+export type AppMode = 'portrait' | 'faceswap' | 'style_transfer' | 'fashion' | 'age_transform' | 'hairstyle' | 'tattoo' | 'photography' | 'pose_transfer' | 'scene_gen';
 
 export interface FashionParams {
   glasses: string;
@@ -46,6 +46,56 @@ export interface PhotographyParams {
   iso: string;
   shutterSpeed: string;
   lensType: string;
+}
+
+export interface PoseParams {
+  poseReferenceImage?: string;
+  selectedPreset?: string;
+}
+
+export interface SceneGenParams {
+  // Character
+  referenceImage?: string;
+  characterAge: number;
+  characterType: string;
+  ethnicity: string;
+  eyeSize: string;
+  skinTone: string;
+  expression: string;
+  gazeDirection: string;
+
+  // Pose & Action
+  bodyPose: string;
+  bodyOrientation: string;
+  headDirection: string;
+  action: string;
+
+  // Clothing
+  topType: string;
+  topColor: string;
+  topStyle: string;
+  bottomType: string;
+  bottomStyle: string;
+  shoesType: string;
+  shoesColor: string;
+
+  // Scene
+  locationType: string;
+  surface: string;
+  props: string[];
+  customProps?: string;
+
+  // Camera & Style
+  cameraAngle: string;
+  shotType: string;
+  photoStyle: string;
+  quality: string;
+
+  // Lighting
+  lightingType: string;
+  timeOfDay: string;
+  weather: string;
+  atmosphere: string;
 }
 
 export interface PresetScenario {
