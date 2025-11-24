@@ -28,7 +28,8 @@ import {
   PetMerchParams,
   ProductFoodParams,
   FigureParams,
-  BeautyParams
+  BeautyParams,
+  GroupPhotoParams
 } from '../types';
 import { FashionControls } from './FashionControls';
 import { AgeControls } from './AgeControls';
@@ -39,19 +40,11 @@ import { PoseControls } from './PoseControls';
 import { SceneGenControls } from './SceneGenControls';
 import { FreeModeControls } from './FreeModeControls';
 import { HanfuControls } from './HanfuControls';
+import { GroupPhotoControls } from './GroupPhotoControls';
 import { ASPECT_RATIOS } from '../constants';
 import { DEFAULT_FIGURE_PROMPT } from '../constants/figureOptions';
 
-const getRatioIconClass = (ratio: string) => {
-  switch (ratio) {
-    case '3:4': return 'w-[18px] h-[24px]';
-    case '4:3': return 'w-[24px] h-[18px]';
-    case '1:1': return 'w-[20px] h-[20px]';
-    case '9:16': return 'w-[14px] h-[24px]';
-    case '16:9': return 'w-[24px] h-[14px]';
-    default: return 'w-[20px] h-[20px]';
-  }
-};
+import { AspectRatioSelector } from './AspectRatioSelector';
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<AppMode>('portrait');
@@ -184,6 +177,11 @@ const App: React.FC = () => {
   const [beautyParams, setBeautyParams] = useState<BeautyParams>({
     selectedOptions: []
   });
+  const [groupPhotoParams, setGroupPhotoParams] = useState<GroupPhotoParams>({
+    images: [],
+    selectedPreset: 'office_team',
+    customPrompt: ''
+  });
 
   // Load history from server on mount
   useEffect(() => {
@@ -249,6 +247,13 @@ const App: React.FC = () => {
       }
     }
 
+    if (mode === 'group_photo') {
+      if (groupPhotoParams.images.length < 1) {
+        setError("Please upload at least one person's photo.");
+        return;
+      }
+    }
+
     if (mode === 'portrait') {
       if (!prompt.trim()) {
         setError("Please enter a prompt or select a style.");
@@ -290,7 +295,8 @@ const App: React.FC = () => {
         petMerchParams,
         productFoodParams,
         figureParams,
-        beautyParams
+        beautyParams,
+        groupPhotoParams
       );
 
       // Save to local server
@@ -326,7 +332,8 @@ const App: React.FC = () => {
             petMerchParams,
             productFoodParams,
             figureParams,
-            beautyParams
+            beautyParams,
+            groupPhotoParams
           }),
         });
 
@@ -648,6 +655,18 @@ const App: React.FC = () => {
                       <span className="text-xs">美颜</span>
                     </div>
                   </button>
+                  <button
+                    onClick={() => { setMode('group_photo'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'group_photo'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">👥</span>
+                      <span className="text-xs">Group Photo</span>
+                    </div>
+                  </button>
                 </div>
               </div>
 
@@ -697,35 +716,16 @@ const App: React.FC = () => {
                       />
                     </div>
 
-                    <div className="mb-8">
-                      <label className="block text-sm font-medium text-slate-300 mb-2">
-                        4. Aspect Ratio
-                      </label>
-                      <div className="grid grid-cols-5 gap-2">
-                        {ASPECT_RATIOS.map((ratio) => (
-                          <button
-                            key={ratio.value}
-                            onClick={() => setAspectRatio(ratio.value)}
-                            className={`flex flex-col items-center justify-center p-2 rounded-lg border transition-all
-                              ${aspectRatio === ratio.value
-                                ? 'bg-brand-600 border-brand-500 text-white shadow-lg shadow-brand-500/25'
-                                : 'bg-slate-900 border-slate-700 text-slate-400 hover:bg-slate-800 hover:border-slate-500'}
-                            `}
-                            title={ratio.label}
-                          >
-                            <div className={`mb-1 border-2 rounded-sm ${aspectRatio === ratio.value ? 'border-white' : 'border-current'
-                              } ${getRatioIconClass(ratio.value)}`} />
-                            <span className="text-[10px] font-medium">{ratio.value}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
+                    <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                   </>
                 ) : mode === 'beauty' ? (
-                  <BeautyControls
-                    params={beautyParams}
-                    onChange={setBeautyParams}
-                  />
+                  <>
+                    <BeautyControls
+                      params={beautyParams}
+                      onChange={setBeautyParams}
+                    />
+                    <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
+                  </>
                 ) : mode === 'faceswap' ? (
                   <>
                     {/* Face Swap Mode Controls */}
@@ -754,6 +754,7 @@ const App: React.FC = () => {
                         />
                       </div>
                     </div>
+                    <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                   </>
                 ) : mode === 'style_transfer' ? (
                   <>
@@ -854,6 +855,7 @@ const App: React.FC = () => {
                         </div>
                       </div>
                     )}
+                    <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                   </>
                 ) : mode === 'age_transform' ? (
                   <>
@@ -863,6 +865,7 @@ const App: React.FC = () => {
                         ageParams={ageParams}
                         onChange={setAgeParams}
                       />
+                      <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                     </div>
                   </>
                 ) : mode === 'hairstyle' ? (
@@ -873,6 +876,7 @@ const App: React.FC = () => {
                         hairstyleParams={hairstyleParams}
                         onChange={setHairstyleParams}
                       />
+                      <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                     </div>
                   </>
                 ) : mode === 'tattoo' ? (
@@ -883,6 +887,7 @@ const App: React.FC = () => {
                         tattooParams={tattooParams}
                         onChange={setTattooParams}
                       />
+                      <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                     </div>
                   </>
                 ) : mode === 'photography' ? (
@@ -894,6 +899,7 @@ const App: React.FC = () => {
                         onChange={setPhotographyParams}
                         onBackgroundImageChange={(img) => setTargetImage(img)}
                       />
+                      <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                     </div>
                   </>
                 ) : mode === 'pose_transfer' ? (
@@ -905,6 +911,7 @@ const App: React.FC = () => {
                         onChange={setPoseParams}
                         onPoseReferenceChange={(img) => setTargetImage(img)}
                       />
+                      <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                     </div>
                   </>
                 ) : mode === 'scene_gen' ? (
@@ -915,6 +922,7 @@ const App: React.FC = () => {
                         sceneGenParams={sceneGenParams}
                         onChange={setSceneGenParams}
                       />
+                      <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                     </div>
                   </>
                 ) : mode === 'free_mode' ? (
@@ -925,6 +933,7 @@ const App: React.FC = () => {
                         freeModeParams={freeModeParams}
                         onChange={setFreeModeParams}
                       />
+                      <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                     </div>
                   </>
                 ) : mode === 'hanfu' ? (
@@ -935,6 +944,7 @@ const App: React.FC = () => {
                         hanfuParams={hanfuParams}
                         onChange={setHanfuParams}
                       />
+                      <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                     </div>
                   </>
                 ) : mode === 'travel' ? (
@@ -944,29 +954,7 @@ const App: React.FC = () => {
                       onChange={setTravelParams}
                     />
 
-                    <div className="mt-6 mb-8">
-                      <label className="block text-sm font-medium text-slate-300 mb-2">
-                        5. Aspect Ratio
-                      </label>
-                      <div className="grid grid-cols-5 gap-2">
-                        {ASPECT_RATIOS.map((ratio) => (
-                          <button
-                            key={ratio.value}
-                            onClick={() => setAspectRatio(ratio.value)}
-                            className={`flex flex-col items-center justify-center p-2 rounded-lg border transition-all
-                              ${aspectRatio === ratio.value
-                                ? 'bg-brand-600 border-brand-500 text-white shadow-lg shadow-brand-500/25'
-                                : 'bg-slate-900 border-slate-700 text-slate-400 hover:bg-slate-800 hover:border-slate-500'}
-                            `}
-                            title={ratio.label}
-                          >
-                            <div className={`mb-1 border-2 rounded-sm ${aspectRatio === ratio.value ? 'border-white' : 'border-current'
-                              } ${getRatioIconClass(ratio.value)}`} />
-                            <span className="text-[10px] font-medium">{ratio.value}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
+                    <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                   </>
                 ) : mode === 'triptych' ? (
                   <>
@@ -974,6 +962,7 @@ const App: React.FC = () => {
                       triptychParams={triptychParams}
                       onChange={setTriptychParams}
                     />
+                    <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                   </>
                 ) : mode === 'pet_merch' ? (
                   <>
@@ -981,6 +970,7 @@ const App: React.FC = () => {
                       petMerchParams={petMerchParams}
                       onChange={setPetMerchParams}
                     />
+                    <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                   </>
                 ) : mode === 'product_food' ? (
                   <>
@@ -988,6 +978,7 @@ const App: React.FC = () => {
                       productFoodParams={productFoodParams}
                       onChange={setProductFoodParams}
                     />
+                    <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                   </>
                 ) : mode === 'figure' ? (
                   <>
@@ -995,6 +986,15 @@ const App: React.FC = () => {
                       figureParams={figureParams}
                       onChange={setFigureParams}
                     />
+                    <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
+                  </>
+                ) : mode === 'group_photo' ? (
+                  <>
+                    <GroupPhotoControls
+                      groupPhotoParams={groupPhotoParams}
+                      onChange={setGroupPhotoParams}
+                    />
+                    <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                   </>
                 ) : (
                   <>
@@ -1004,6 +1004,7 @@ const App: React.FC = () => {
                         fashionParams={fashionParams}
                         onChange={setFashionParams}
                       />
+                      <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                     </div>
                   </>
                 )}
@@ -1011,9 +1012,9 @@ const App: React.FC = () => {
                 {/* Generate Button */}
                 <button
                   onClick={handleGenerate}
-                  disabled={isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && !referenceImage) || (mode === 'faceswap' && !targetImage)}
+                  disabled={isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && !referenceImage) || (mode === 'faceswap' && !targetImage)}
                   className={`w-full py-4 rounded-xl font-bold text-lg shadow-xl flex items-center justify-center transition-all transform active:scale-[0.98]
-                    ${isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && !referenceImage) || (mode === 'faceswap' && !targetImage)
+                    ${isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && !referenceImage) || (mode === 'faceswap' && !targetImage)
                       ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
                       : 'bg-gradient-to-r from-brand-600 to-purple-600 hover:from-brand-500 hover:to-purple-500 text-white shadow-brand-500/25 hover:shadow-brand-500/40'}
                   `}
@@ -1028,7 +1029,7 @@ const App: React.FC = () => {
                     </>
                   ) : (
                     <>
-                      <span className="mr-2">✨</span> {mode === 'portrait' ? 'Generate Portrait' : mode === 'faceswap' ? 'Swap Face' : mode === 'style_transfer' ? 'Convert Style' : mode === 'age_transform' ? 'Transform Age' : mode === 'hairstyle' ? 'Change Hairstyle' : mode === 'tattoo' ? 'Preview Tattoo' : mode === 'photography' ? 'Generate Photo' : mode === 'pose_transfer' ? 'Transfer Pose' : mode === 'scene_gen' ? 'Generate Scene' : mode === 'free_mode' ? 'Creative Generate' : mode === 'travel' ? 'Start Travel' : mode === 'triptych' ? 'Generate Triptych' : mode === 'pet_merch' ? 'Generate Merch' : mode === 'product_food' ? 'Generate Product' : 'Create Look'}
+                      <span className="mr-2">✨</span> {mode === 'portrait' ? 'Generate Portrait' : mode === 'faceswap' ? 'Swap Face' : mode === 'style_transfer' ? 'Convert Style' : mode === 'age_transform' ? 'Transform Age' : mode === 'hairstyle' ? 'Change Hairstyle' : mode === 'tattoo' ? 'Preview Tattoo' : mode === 'photography' ? 'Generate Photo' : mode === 'pose_transfer' ? 'Transfer Pose' : mode === 'scene_gen' ? 'Generate Scene' : mode === 'free_mode' ? 'Creative Generate' : mode === 'travel' ? 'Start Travel' : mode === 'triptych' ? 'Generate Triptych' : mode === 'pet_merch' ? 'Generate Merch' : mode === 'product_food' ? 'Generate Product' : mode === 'group_photo' ? 'Generate Group Photo' : 'Create Look'}
                     </>
                   )}
                 </button>

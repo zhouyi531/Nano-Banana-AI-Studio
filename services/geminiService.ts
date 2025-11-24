@@ -1,5 +1,5 @@
 import { GoogleGenAI, Modality } from "@google/genai";
-import { AspectRatio, AppMode } from "../types";
+import { AspectRatio, AppMode, GroupPhotoParams } from "../types";
 import { GenerationContext, GenerationStrategy } from "./strategies/types";
 import { FaceSwapStrategy } from "./strategies/faceSwap";
 import { StyleTransferStrategy } from "./strategies/styleTransfer";
@@ -17,6 +17,7 @@ import { PetMerchStrategy } from "./strategies/petMerch";
 import { ProductFoodStrategy } from "./strategies/productFood";
 import { FigureStrategy } from "./strategies/figure";
 import { BeautyStrategy } from "./strategies/beauty";
+import { GroupPhotoStrategy } from "./strategies/groupPhoto";
 
 declare const process: any;
 
@@ -59,6 +60,7 @@ const strategies: Record<string, GenerationStrategy> = {
   'product_food': new ProductFoodStrategy(),
   'figure': new FigureStrategy(),
   'beauty': new BeautyStrategy(),
+  'group_photo': new GroupPhotoStrategy(),
   // Map undefined modes to PortraitStrategy for now (replicating original behavior)
   'free_mode': new PortraitStrategy(),
   'pose_transfer': new PortraitStrategy(),
@@ -89,7 +91,8 @@ export const generatePortrait = async (
   petMerchParams?: any,
   productFoodParams?: any,
   figureParams?: any,
-  beautyParams?: any
+  beautyParams?: any,
+  groupPhotoParams?: GroupPhotoParams
 ): Promise<string> => {
   const ai = getClient();
 
@@ -118,7 +121,8 @@ export const generatePortrait = async (
     petMerchParams,
     productFoodParams,
     figureParams,
-    beautyParams
+    beautyParams,
+    groupPhotoParams
   };
 
   try {
@@ -133,14 +137,31 @@ export const generatePortrait = async (
       '16:9': '16:9'
     };
 
+    const isFlashImage = model === 'gemini-2.5-flash-image';
+
+    const config: any = {
+      responseModalities: isFlashImage ? [Modality.IMAGE] : [Modality.TEXT, Modality.IMAGE],
+      imageConfig: {
+        aspectRatio: aspectRatioMap[ratio] || '1:1',
+      },
+    };
+
+    if (!isFlashImage) {
+      config.thinkingConfig = {
+        includeThoughts: true
+      };
+
+      // For Pro model, set image size from env or default to 2K
+      if (model === 'gemini-3-pro-image-preview') {
+        const imageSize = import.meta.env.VITE_GEMINI_IMAGE_SIZE || '2K';
+        config.imageConfig.imageSize = imageSize;
+      }
+    }
+
     const response = await ai.models.generateContent({
       model: model,
       contents: { parts },
-      config: {
-        responseModalities: [Modality.IMAGE],
-        aspectRatio: aspectRatioMap[ratio] || '1:1',
-        imageSize: '2K', // Force 2K resolution output
-      },
+      config: config,
     });
 
     const resultParts = response.candidates?.[0]?.content?.parts;
@@ -148,8 +169,11 @@ export const generatePortrait = async (
       throw new Error("No image generated.");
     }
 
-    // Handle the image response
+    // Handle the response
     for (const part of resultParts) {
+      if (part.text) {
+        console.log(`[Nano Banana Thought]: ${part.text}`);
+      }
       if (part.inlineData) {
         const base64ImageBytes = part.inlineData.data;
         return `data:image/png;base64,${base64ImageBytes}`;

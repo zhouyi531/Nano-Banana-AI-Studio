@@ -25,6 +25,8 @@ export interface GenerationContext {
     petMerchParams?: any;
     productFoodParams?: any;
     figureParams?: any;
+    beautyParams?: any;
+    groupPhotoParams?: any;
 }
 
 export interface GenerationStrategy {

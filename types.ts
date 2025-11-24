@@ -6,7 +6,7 @@ export enum AspectRatio {
   Ratio_16_9 = '16:9',
 }
 
-export type AppMode = 'portrait' | 'faceswap' | 'style_transfer' | 'fashion' | 'age_transform' | 'hairstyle' | 'tattoo' | 'photography' | 'pose_transfer' | 'scene_gen' | 'free_mode' | 'hanfu' | 'travel' | 'triptych' | 'pet_merch' | 'product_food' | 'figure' | 'beauty';
+export type AppMode = 'portrait' | 'faceswap' | 'style_transfer' | 'fashion' | 'age_transform' | 'hairstyle' | 'tattoo' | 'photography' | 'pose_transfer' | 'scene_gen' | 'free_mode' | 'hanfu' | 'travel' | 'triptych' | 'pet_merch' | 'product_food' | 'figure' | 'beauty' | 'group_photo';
 
 export interface FashionParams {
   glasses: string;
@@ -103,6 +103,12 @@ export interface FreeModeParams {
   prompt: string;
 }
 
+export interface GroupPhotoParams {
+  images: string[];
+  selectedPreset: string;
+  customPrompt?: string;
+}
+
 export interface HanfuParams {
   description: string;
   imagePrompt: string;
@@ -152,6 +158,7 @@ export interface GenerationRequest {
   prompt: string;
   aspectRatio: AspectRatio;
   mode: AppMode;
+  groupPhotoParams?: GroupPhotoParams;
 }
 
 export interface GenerationResponse {
@@ -189,4 +196,17 @@ export interface TriptychParams {
 
 export interface BeautyParams {
   selectedOptions: string[];
+}
+
+export interface PetMerchParams {
+  selectedPreset: string;
+}
+
+export interface ProductFoodParams {
+  selectedPreset: string;
+}
+
+export interface FigureParams {
+  selectedPreset: string;
+  prompt: string;
 }

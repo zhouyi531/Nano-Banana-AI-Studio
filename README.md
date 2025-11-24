@@ -44,6 +44,16 @@
 ![Tattoo Example 2](examples/屏幕截图%202025-11-21%20232745.jpg)
 ![Tattoo Example 3](examples/屏幕截图%202025-11-21%20232902.jpg)
 
+#### Latest Generations
+![Gen 1](examples/1763906847068.png)
+![Gen 2](examples/1763914738666.png)
+![Gen 3](examples/1763920169812.png)
+![Gen 4](examples/1763980655761.png)
+![Gen 5](examples/1763982529318.png)
+![Gen 6](examples/1763986413146.png)
+![Gen 7](examples/1764005671865.png)
+![Gen 8](examples/1764005767241.png)
+
 ### 🚀 Installation
 
 #### Prerequisites
@@ -176,6 +186,16 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ![纹身示例 1](examples/屏幕截图%202025-11-21%20232708.jpg)
 ![纹身示例 2](examples/屏幕截图%202025-11-21%20232745.jpg)
 ![纹身示例 3](examples/屏幕截图%202025-11-21%20232902.jpg)
+
+#### 最新生成
+![生成示例 1](examples/1763906847068.png)
+![生成示例 2](examples/1763914738666.png)
+![生成示例 3](examples/1763920169812.png)
+![生成示例 4](examples/1763980655761.png)
+![生成示例 5](examples/1763982529318.png)
+![生成示例 6](examples/1763986413146.png)
+![生成示例 7](examples/1764005671865.png)
+![生成示例 8](examples/1764005767241.png)
 
 ### 🚀 安装步骤
 
