@@ -19,7 +19,11 @@ import { FigureStrategy } from "./strategies/figure";
 import { BeautyStrategy } from "./strategies/beauty";
 import { GroupPhotoStrategy } from "./strategies/groupPhoto";
 
+import { FreeModeStrategy } from "./strategies/freeMode";
+import { StyleCopyStrategy } from "./strategies/styleCopy";
+
 declare const process: any;
+
 
 const getClient = () => {
   console.log('[DEBUG] API Key Check:');
@@ -61,8 +65,8 @@ const strategies: Record<string, GenerationStrategy> = {
   'figure': new FigureStrategy(),
   'beauty': new BeautyStrategy(),
   'group_photo': new GroupPhotoStrategy(),
-  // Map undefined modes to PortraitStrategy for now (replicating original behavior)
-  'free_mode': new PortraitStrategy(),
+  'free_mode': new FreeModeStrategy(),
+  'style_copy': new StyleCopyStrategy(),
   'pose_transfer': new PortraitStrategy(),
 };
 
@@ -92,7 +96,8 @@ export const generatePortrait = async (
   productFoodParams?: any,
   figureParams?: any,
   beautyParams?: any,
-  groupPhotoParams?: GroupPhotoParams
+  groupPhotoParams?: GroupPhotoParams,
+  styleCopyParams?: any
 ): Promise<string> => {
   const ai = getClient();
 
@@ -122,7 +127,8 @@ export const generatePortrait = async (
     productFoodParams,
     figureParams,
     beautyParams,
-    groupPhotoParams
+    groupPhotoParams,
+    styleCopyParams
   };
 
   try {
@@ -185,5 +191,42 @@ export const generatePortrait = async (
   } catch (error: any) {
     console.error("Gemini API Error:", error);
     throw new Error(error.message || "Failed to generate image");
+  }
+};
+
+export const analyzeStyle = async (image: string): Promise<string> => {
+  const ai = getClient();
+  const cleanBase64 = (str: string) => str.split(',')[1] || str;
+
+  try {
+    const analysisResponse = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: {
+        parts: [
+          {
+            inlineData: {
+              mimeType: 'image/png',
+              data: cleanBase64(image)
+            }
+          },
+          {
+            text: "给我json类型的结构化提示词. Analyze this image and provide a structured JSON description of the style, lighting, colors, composition, and mood. Return ONLY the JSON."
+          }
+        ]
+      },
+      config: {
+        responseModalities: [Modality.TEXT]
+      }
+    });
+
+    const analysisText = analysisResponse.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!analysisText) {
+      throw new Error("Failed to analyze style image. No text returned.");
+    }
+
+    return analysisText;
+  } catch (error: any) {
+    console.error("Error analyzing style:", error);
+    throw new Error(`Failed to analyze style: ${error.message || "Unknown error"}`);
   }
 };

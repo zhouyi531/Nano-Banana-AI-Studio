@@ -27,6 +27,7 @@ export interface GenerationContext {
     figureParams?: any;
     beautyParams?: any;
     groupPhotoParams?: any;
+    styleCopyParams?: any;
 }
 
 export interface GenerationStrategy {

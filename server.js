@@ -108,6 +108,70 @@ app.get('/api/history', (req, res) => {
   }
 });
 
+// Style Presets
+const STYLES_DIR = path.join(__dirname, 'public', 'styles');
+if (!fs.existsSync(STYLES_DIR)) {
+  fs.mkdirSync(STYLES_DIR, { recursive: true });
+}
+
+app.post('/api/save-style', (req, res) => {
+  try {
+    const { name, data } = req.body;
+    if (!name || !data) {
+      return res.status(400).json({ error: 'Missing name or data' });
+    }
+
+    const id = Date.now().toString();
+    const filename = `${id}.json`;
+    const filepath = path.join(STYLES_DIR, filename);
+
+    const styleData = {
+      id,
+      name,
+      data, // The JSON string from Gemini analysis
+      timestamp: Date.now()
+    };
+
+    fs.writeFileSync(filepath, JSON.stringify(styleData, null, 2));
+    console.log(`Saved style preset: ${name} (${filename})`);
+
+    res.json({ success: true, id });
+  } catch (error) {
+    console.error('Error saving style:', error);
+    res.status(500).json({ error: 'Failed to save style' });
+  }
+});
+
+app.get('/api/styles', (req, res) => {
+  try {
+    if (!fs.existsSync(STYLES_DIR)) {
+      return res.json([]);
+    }
+
+    const files = fs.readdirSync(STYLES_DIR);
+    const styles = [];
+
+    for (const file of files) {
+      if (file.endsWith('.json')) {
+        try {
+          const content = fs.readFileSync(path.join(STYLES_DIR, file), 'utf-8');
+          styles.push(JSON.parse(content));
+        } catch (err) {
+          console.error(`Error parsing style file ${file}:`, err);
+        }
+      }
+    }
+
+    // Sort by timestamp descending
+    styles.sort((a, b) => b.timestamp - a.timestamp);
+
+    res.json(styles);
+  } catch (error) {
+    console.error('Error fetching styles:', error);
+    res.status(500).json({ error: 'Failed to fetch styles' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
