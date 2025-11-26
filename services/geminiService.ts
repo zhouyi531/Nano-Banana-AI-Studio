@@ -1,5 +1,5 @@
 import { GoogleGenAI, Modality } from "@google/genai";
-import { AspectRatio, AppMode, GroupPhotoParams } from "../types";
+import { AspectRatio, AppMode, GroupPhotoParams, CharacterEditParams, GameStyleParams, ImageModParams } from "../types";
 import { GenerationContext, GenerationStrategy } from "./strategies/types";
 import { FaceSwapStrategy } from "./strategies/faceSwap";
 import { StyleTransferStrategy } from "./strategies/styleTransfer";
@@ -12,18 +12,21 @@ import { SceneGenStrategy } from "./strategies/sceneGen";
 import { PortraitStrategy } from "./strategies/portrait";
 import { HanfuStrategy } from "./strategies/hanfu";
 import { TravelStrategy } from "./strategies/travel";
+import { GroupPhotoStrategy } from "./strategies/groupPhoto";
+import { FreeModeStrategy } from "./strategies/freeMode";
+import { StyleCopyStrategy } from "./strategies/styleCopy";
+import { CharacterEditStrategy } from "./strategies/characterEdit";
+import { GameStyleStrategy } from "./strategies/gameStyle";
+import { ImageModStrategy } from "./strategies/imageMod";
+import { DragonBallStrategy } from "./strategies/dragonBallStrategy";
+import { ObjectDecompositionStrategy } from "./strategies/objectDecompositionStrategy";
 import { TriptychStrategy } from "./strategies/triptych";
 import { PetMerchStrategy } from "./strategies/petMerch";
 import { ProductFoodStrategy } from "./strategies/productFood";
 import { FigureStrategy } from "./strategies/figure";
 import { BeautyStrategy } from "./strategies/beauty";
-import { GroupPhotoStrategy } from "./strategies/groupPhoto";
-
-import { FreeModeStrategy } from "./strategies/freeMode";
-import { StyleCopyStrategy } from "./strategies/styleCopy";
 
 declare const process: any;
-
 
 const getClient = () => {
   console.log('[DEBUG] API Key Check:');
@@ -67,7 +70,11 @@ const strategies: Record<string, GenerationStrategy> = {
   'group_photo': new GroupPhotoStrategy(),
   'free_mode': new FreeModeStrategy(),
   'style_copy': new StyleCopyStrategy(),
-  'pose_transfer': new PortraitStrategy(),
+  'character_edit': new CharacterEditStrategy(),
+  'game_style': new GameStyleStrategy(),
+  'image_modification': new ImageModStrategy(),
+  'dragon_ball': new DragonBallStrategy(),
+  'object_decomposition': new ObjectDecompositionStrategy(),
 };
 
 export const generatePortrait = async (
@@ -97,7 +104,12 @@ export const generatePortrait = async (
   figureParams?: any,
   beautyParams?: any,
   groupPhotoParams?: GroupPhotoParams,
-  styleCopyParams?: any
+  styleCopyParams?: any,
+  characterEditParams?: CharacterEditParams,
+  gameStyleParams?: GameStyleParams,
+  imageModParams?: ImageModParams,
+  dragonBallParams?: any,
+  objectDecompositionParams?: any
 ): Promise<string> => {
   const ai = getClient();
 
@@ -128,7 +140,12 @@ export const generatePortrait = async (
     figureParams,
     beautyParams,
     groupPhotoParams,
-    styleCopyParams
+    styleCopyParams,
+    characterEditParams,
+    gameStyleParams,
+    imageModParams,
+    dragonBallParams,
+    objectDecompositionParams
   };
 
   try {

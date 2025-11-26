@@ -126,6 +126,93 @@ export class SceneGenStrategy implements GenerationStrategy {
       Generate a stunning, ultra-realistic photograph that looks like a professionally shot and retouched influencer photo - the person should look their absolute best while maintaining natural believability and facial identity.
     `;
 
+        if (sceneGenParams.selectedTemplateId === 'nine_grid') {
+            const nineGridPrompt = `Task: Create a 3x3 Photo Booth Grid (Nine-Grid)
+
+      ${referenceImageBase64 ? 'REFERENCE FACE PROVIDED: Use the attached image to preserve facial identity exactly.' : 'NO REFERENCE IMAGE: Generate character from description.'}
+
+      Instructions:
+      1. Create a 3x3 grid layout (9 panels total) in a single image.
+      2. Each panel must show the SAME person (consistent identity/clothing).
+      3. CRITICAL: Each panel must have a DIFFERENT pose and DIFFERENT expression. No duplicates.
+      4. Style: Photo booth style, fun, dynamic, high quality.
+      5. Aspect Ratio: ${ratio}
+      
+      Prompt: 用图1做一个3*3的photo booth grid,每张要用不同的姿势和表情不许重复
+      `;
+            return [refImagePart, { text: nineGridPrompt }].filter(part => part !== null);
+        }
+
+        if (sceneGenParams.selectedTemplateId === 'four_panel') {
+            const fourPanelPrompt = `Task: Create a Four-Panel Composition (Four-Panel)
+
+      ${referenceImageBase64 ? 'REFERENCE FACE PROVIDED: Use the attached image to preserve facial identity exactly.' : 'NO REFERENCE IMAGE: Generate character from description.'}
+
+      Instructions:
+      1. Create a four-panel composition (2x2 grid) in a single image.
+      2. Keep the person’s face, hairstyle, and clothing exactly the same as in the uploaded image for all panels.
+      3. Upper-left: A close-up of her face from a high angle, with her looking up with upward eyes.
+      4. Upper-right: She raises one arm and stretches while yawning.
+      5. Lower-left: An over-the-shoulder shot from behind her, showing her hands or what she is doing.
+      6. Lower-right: She takes a selfie while sticking out her tongue.
+      7. Style: Realistic photo style, consistent identity, natural lighting.
+      8. Aspect Ratio: ${ratio}
+      `;
+            return [refImagePart, { text: fourPanelPrompt }].filter(part => part !== null);
+        }
+
+        if (sceneGenParams.selectedTemplateId === 'doodle_bombing') {
+            const backgroundId = sceneGenParams.customProps || 'graffiti_alley';
+            let backgroundPrompt = 'A blurred, colorful urban graffiti alleyway in bright daylight';
+
+            switch (backgroundId) {
+                case 'neon_city':
+                    backgroundPrompt = 'A vibrant cyberpunk city street at night with neon signs';
+                    break;
+                case 'white_studio':
+                    backgroundPrompt = 'A clean, high-key white studio background';
+                    break;
+                case 'abstract_pop':
+                    backgroundPrompt = 'A dynamic abstract background with pop-art patterns and halftone dots';
+                    break;
+                case 'skate_park':
+                    backgroundPrompt = 'A sunny outdoor skate park with concrete ramps and blue sky';
+                    break;
+                case 'graffiti_alley':
+                default:
+                    backgroundPrompt = 'A blurred, colorful urban graffiti alleyway in bright daylight';
+                    break;
+            }
+
+            const doodlePrompt = `Task: Generate a "Doodle Bombing" Mixed Media Portrait
+
+      ${referenceImageBase64 ? 'REFERENCE FACE PROVIDED: Use the attached image to preserve facial identity exactly.' : 'NO REFERENCE IMAGE: Generate character from description.'}
+
+      [Aesthetic Philosophy]: "Harajuku Pop-Art Explosion". A creative blend of hyper-realistic commercial photography and vibrant 2D cartoon/vector art.
+
+      [Subject]:
+      - Appearance: A photorealistic medium shot of a cute young Asian woman (or matching reference face).
+      - Style: Short dark bob haircut (unless reference differs), playful pouting expression, making a heart shape with hands.
+      - Outfit: Rainbow-striped t-shirt and pink denim overalls (dungarees).
+
+      [The "Doodle Bombing" Style]:
+      - The realistic photo is heavily decorated with bright, bold, colorful 2D vector graphics and stickers floating around her.
+      - Elements: Cute smiling monster faces, neon hearts, stars, rainbows, and bubbly graffiti text.
+      - Art Style: Thick outlines, flat saturated colors (neon pink, cyan, yellow).
+      - Integration: The doodles should interact with the subject (e.g., peeking over her shoulder, floating near her hands).
+
+      [Background]:
+      ${backgroundPrompt}
+
+      [Technical]:
+      - 8k resolution, sharp focus on the face.
+      - High-quality commercial photography lighting.
+      - High saturation, cheerful atmosphere.
+      - Aspect Ratio: ${ratio}
+      `;
+            return [refImagePart, { text: doodlePrompt }].filter(part => part !== null);
+        }
+
         return [refImagePart, { text: sceneGenPrompt }].filter(part => part !== null);
     }
 }

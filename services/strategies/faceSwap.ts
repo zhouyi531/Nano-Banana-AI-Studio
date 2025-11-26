@@ -44,14 +44,16 @@ export class FaceSwapStrategy implements GenerationStrategy {
       Simultaneously improve the image quality: enhance resolution, correct lighting and color balance, and fix artifacts/flaws.
       
       Strict Rules:
-      1. CRITICAL: The facial identity MUST match the SOURCE IDENTITY exactly. Do NOT alter facial features.
-      2. ASPECT RATIO: The output image MUST have the EXACT SAME aspect ratio as the TARGET SCENE (first image). Do not crop or resize the canvas.
-      3. RESOLUTION: Generate a high-resolution image with the long edge approximately 2048px.
-      4. Keep the first image's composition, pose, and clothing EXACTLY as they are.
-      5. Seamlessly blend the new face with the target environment's lighting and skin tone.
-      6. Output must be high-definition, photorealistic, and free of noise or artifacts.
-      7. Correct any color discrepancies and lighting issues to make the image look professional.
+      1. CRITICAL: The facial identity MUST match the SOURCE IDENTITY exactly.
+      2. Identity Preservation: Use the attached woman (Source Identity) as the base image for the face. Do not change her facial features, bone structure, makeup style, skin tone, lighting direction, clothing, background, or overall photorealistic beauty (Note: 'clothing, background' refers to the source image's style if applicable, but primarily preserve the face details. For the final output, blend this face into the Target Scene).
+      3. ASPECT RATIO: The output image MUST have the EXACT SAME aspect ratio as the TARGET SCENE (first image). Do not crop or resize the canvas.
+      4. RESOLUTION: Generate a high-resolution image with the long edge approximately 2048px.
+      5. Keep the first image's composition, pose, and clothing EXACTLY as they are (except for the face swap).
+      6. Seamlessly blend the new face with the target environment's lighting and skin tone.
+      7. Output must be high-definition, photorealistic, and free of noise or artifacts.
     `;
+
+        console.log('Generated Face Swap Prompt:', faceSwapPrompt);
 
         parts.push({ text: faceSwapPrompt });
         return parts;

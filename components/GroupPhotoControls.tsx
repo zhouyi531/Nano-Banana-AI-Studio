@@ -22,39 +22,51 @@ export const GroupPhotoControls: React.FC<GroupPhotoControlsProps> = ({
     const presets = [
         {
             id: 'office_team',
-            name: 'Office Team',
-            description: 'Professional group photo in an office setting',
-            prompt: 'An office group photo of these people, they are making funny faces.'
+            name: 'Office',
+            description: 'Modern office environment',
+            prompt: 'Modern office background with glass walls and bright lighting.'
         },
         {
-            id: 'family_portrait',
-            name: 'Family Portrait',
-            description: 'Warm and cozy family photo in a living room',
-            prompt: 'A warm family portrait of these people sitting together in a cozy living room, smiling naturally.'
+            id: 'family_home',
+            name: 'Cozy Home',
+            description: 'Warm living room setting',
+            prompt: 'Cozy living room background with warm lighting and comfortable furniture.'
         },
         {
-            id: 'friends_party',
-            name: 'Friends Party',
-            description: 'Fun party atmosphere with balloons and confetti',
-            prompt: 'A group of friends at a party, laughing and having fun, colorful background with balloons.'
+            id: 'party',
+            name: 'Party',
+            description: 'Festive party atmosphere',
+            prompt: 'Festive party background with balloons, confetti, and colorful lights.'
         },
         {
-            id: 'graduation',
-            name: 'Graduation',
-            description: 'Wearing graduation gowns and holding diplomas',
-            prompt: 'A graduation group photo, wearing gowns and caps, holding diplomas, university campus background.'
+            id: 'campus',
+            name: 'Campus',
+            description: 'University campus grounds',
+            prompt: 'University campus background with green lawns and academic buildings.'
         },
         {
-            id: 'band_group',
-            name: 'Music Band',
-            description: 'Cool rock band posing with instruments',
-            prompt: 'A cool rock band group photo, posing with musical instruments, dramatic lighting, stage background.'
+            id: 'stage',
+            name: 'Stage',
+            description: 'Concert stage with lights',
+            prompt: 'Concert stage background with dramatic spotlights and equipment.'
         },
         {
-            id: 'superheroes',
-            name: 'Superheroes',
-            description: 'Epic superhero team pose',
-            prompt: 'An epic team of superheroes posing together, wearing unique costumes, dramatic city skyline background.'
+            id: 'city_skyline',
+            name: 'City Skyline',
+            description: 'Epic city view at night',
+            prompt: 'Dramatic city skyline background at twilight with city lights.'
+        },
+        {
+            id: 'park',
+            name: 'Nature Park',
+            description: 'Sunny outdoor park',
+            prompt: 'Beautiful outdoor park background with trees, grass, and sunlight.'
+        },
+        {
+            id: 'beach',
+            name: 'Beach',
+            description: 'Sunny tropical beach',
+            prompt: 'Sunny tropical beach background with blue ocean and white sand.'
         }
     ];
 
@@ -65,7 +77,7 @@ export const GroupPhotoControls: React.FC<GroupPhotoControlsProps> = ({
                 <h3 className="text-sm font-medium text-blue-400 mb-2">👥 Group Photo Mode</h3>
                 <p className="text-xs text-slate-300 leading-relaxed">
                     Upload multiple photos (faces) to create a group picture.
-                    Select a scenario preset or describe your own!
+                    Select a background preset or describe your own!
                 </p>
             </div>
 
@@ -80,7 +92,7 @@ export const GroupPhotoControls: React.FC<GroupPhotoControlsProps> = ({
             {/* Preset Selector */}
             <div>
                 <label className="block text-sm font-medium text-slate-300 mb-3">
-                    Choose Scenario
+                    Choose Background
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                     {presets.map((preset) => (

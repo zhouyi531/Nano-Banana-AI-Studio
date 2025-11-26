@@ -9,6 +9,9 @@ import { PetMerchControls } from './PetMerchControls';
 import { ProductFoodControls } from './ProductFoodControls';
 import { FigureControls } from './FigureControls';
 import { BeautyControls } from './BeautyControls';
+import { ImageModControls } from './ImageModControls';
+import { DEFAULT_IMAGE_MOD_PARAMS } from '../constants/imageModOptions';
+import { PRESETS } from '../constants';
 import {
   AppMode,
   AspectRatio,
@@ -30,7 +33,11 @@ import {
   FigureParams,
   BeautyParams,
   GroupPhotoParams,
-  StyleCopyParams
+  StyleCopyParams,
+  CharacterEditParams,
+  GameStyleParams,
+  ImageModParams,
+  DragonBallParams
 } from '../types';
 import { FashionControls } from './FashionControls';
 import { AgeControls } from './AgeControls';
@@ -43,6 +50,12 @@ import { FreeModeControls } from './FreeModeControls';
 import { HanfuControls } from './HanfuControls';
 import { GroupPhotoControls } from './GroupPhotoControls';
 import { StyleCopyControls } from './StyleCopyControls';
+import { CharacterEditControls } from './CharacterEditControls';
+import { GameStyleControls } from './GameStyleControls';
+import { DragonBallCardControls } from './DragonBallCardControls';
+import { ObjectDecompositionControls } from './ObjectDecompositionControls';
+import { DRAGON_BALL_CHARACTERS } from '../constants/dragonBallData';
+import { compositeDragonBallCard } from '../utils/dragonBallCompositor';
 import { ASPECT_RATIOS } from '../constants';
 import { DEFAULT_FIGURE_PROMPT } from '../constants/figureOptions';
 
@@ -187,6 +200,24 @@ const App: React.FC = () => {
   const [styleCopyParams, setStyleCopyParams] = useState<StyleCopyParams>({
     styleImage: ''
   });
+  const [characterEditParams, setCharacterEditParams] = useState<CharacterEditParams>({
+    expression: '',
+    hairstyle: '',
+    skinTone: '',
+    pose: '',
+    clothing: '',
+    props: ''
+  });
+  const [gameStyleParams, setGameStyleParams] = useState<GameStyleParams>({
+    selectedStyle: 'CYBERPUNK STYLE',
+    keywords: '霓虹都市, 高科技低生活, 雨夜氛围',
+    customPrompt: ''
+  });
+  const [imageModParams, setImageModParams] = useState<ImageModParams>(DEFAULT_IMAGE_MOD_PARAMS);
+  const [dragonBallParams, setDragonBallParams] = useState<DragonBallParams>({});
+  const [objectDecompositionParams, setObjectDecompositionParams] = useState<ObjectDecompositionParams>({
+    objectName: ''
+  });
 
   // Load history from server on mount
   useEffect(() => {
@@ -236,7 +267,7 @@ const App: React.FC = () => {
   const handleGenerate = async () => {
     setError(null);
 
-    if (!referenceImage && mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel') {
+    if (!referenceImage && mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && mode !== 'dragon_ball' && mode !== 'object_decomposition') {
       setError("Please upload a reference face.");
       return;
     }
@@ -281,6 +312,13 @@ const App: React.FC = () => {
     setIsGenerating(true);
     setGeneratedImage(null);
 
+    let currentDragonBallParams = dragonBallParams;
+    if (mode === 'dragon_ball') {
+      const randomChar = DRAGON_BALL_CHARACTERS[Math.floor(Math.random() * DRAGON_BALL_CHARACTERS.length)];
+      currentDragonBallParams = { ...dragonBallParams, characterId: randomChar.id };
+      setDragonBallParams(currentDragonBallParams);
+    }
+
     try {
       const resultUrl = await generatePortrait(
         referenceImage,
@@ -309,11 +347,32 @@ const App: React.FC = () => {
         figureParams,
         beautyParams,
         groupPhotoParams,
-        styleCopyParams
+        styleCopyParams,
+        characterEditParams,
+        gameStyleParams,
+        imageModParams,
+        mode === 'dragon_ball' ? currentDragonBallParams : dragonBallParams,
+        objectDecompositionParams
       );
+      let finalImageUrl = resultUrl;
+
+      // For Dragon Ball mode, composite the card with UI elements
+      if (mode === 'dragon_ball' && currentDragonBallParams.characterId) {
+        const char = DRAGON_BALL_CHARACTERS.find(c => c.id === currentDragonBallParams.characterId);
+        if (char) {
+          try {
+            finalImageUrl = await compositeDragonBallCard(resultUrl, char);
+          } catch (e) {
+            console.error('Failed to composite Dragon Ball card:', e);
+            // Fallback to original image if composition fails
+          }
+        }
+      }
+
+      setGeneratedImage(finalImageUrl);
 
       // Save to local server
-      let savedImageUrl = resultUrl;
+      let savedImageUrl = finalImageUrl;
       try {
         const response = await fetch('http://localhost:3001/api/save-image', {
           method: 'POST',
@@ -347,7 +406,10 @@ const App: React.FC = () => {
             figureParams,
             beautyParams,
             groupPhotoParams,
-            styleCopyParams
+            styleCopyParams,
+            characterEditParams,
+            dragonBallParams: mode === 'dragon_ball' ? currentDragonBallParams : undefined,
+            objectDecompositionParams
           }),
         });
 
@@ -693,19 +755,84 @@ const App: React.FC = () => {
                       <span className="text-xs">Style Copy</span>
                     </div>
                   </button>
+                  <button
+                    onClick={() => { setMode('character_edit'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'character_edit'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">✏️</span>
+                      <span className="text-xs">人物修改</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setMode('game_style'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'game_style'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">🎮</span>
+                      <span className="text-xs">Game Style</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setMode('image_modification'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'image_modification'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">🖼️</span>
+                      <span className="text-xs">高清修复Upscale</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setMode('dragon_ball');
+                      setError(null);
+                    }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'dragon_ball'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">🐉</span>
+                      <span className="text-xs">Dragon Ball</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setMode('object_decomposition'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'object_decomposition'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">🧩</span>
+                      <span className="text-xs">Decompose</span>
+                    </div>
+                  </button>
                 </div>
               </div>
 
               <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700 shadow-xl backdrop-blur-sm">
 
-                {/* Reference Face (Common to both) */}
-                <ImageUploader
-                  id="ref-img"
-                  label="1. Reference Face (Source)"
-                  selectedImage={referenceImage}
-                  onImageSelect={setReferenceImage}
-                  helpText="Upload clear photo of face to use"
-                />
+                {/* Reference Face (Common to both) - Hidden for Group Photo */}
+                {mode !== 'group_photo' && (
+                  <ImageUploader
+                    id="ref-img"
+                    label="1. Reference Face (Source)"
+                    selectedImage={referenceImage}
+                    onImageSelect={setReferenceImage}
+                    helpText="Upload clear photo of face to use"
+                  />
+                )}
 
                 {mode === 'portrait' ? (
                   <>
@@ -714,6 +841,8 @@ const App: React.FC = () => {
                       selectedPresetId={selectedPresetId}
                       onSelect={handlePresetSelect}
                     />
+
+
 
                     <div className="mb-6">
                       <div className="flex justify-between items-center mb-2">
@@ -852,35 +981,7 @@ const App: React.FC = () => {
                           ))}
                         </div>
                       </div>
-                    ) : (
-                      <div className="mb-8">
-                        <label className="block text-sm font-medium text-slate-300 mb-2">
-                          3. Choose Target Ethnicity
-                        </label>
-                        <div className="grid grid-cols-2 gap-3">
-                          {[
-                            { id: 'east_asian', name: 'East Asian', desc: 'Chinese/Japanese/Korean' },
-                            { id: 'caucasian', name: 'Caucasian', desc: 'European/White' },
-                            { id: 'african', name: 'African', desc: 'Black/African Descent' },
-                            { id: 'south_asian', name: 'South Asian', desc: 'Indian/Pakistani' },
-                            { id: 'hispanic', name: 'Hispanic', desc: 'Latino/Hispanic' },
-                            { id: 'none', name: 'None / Other', desc: 'Fantasy / Non-human' },
-                          ].map((eth) => (
-                            <button
-                              key={eth.id}
-                              onClick={() => setEthnicity(eth.id)}
-                              className={`p-3 rounded-lg border text-left transition-all ${ethnicity === eth.id
-                                ? 'bg-brand-600 border-brand-500 text-white'
-                                : 'bg-slate-900 border-slate-700 text-slate-400 hover:bg-slate-800'
-                                }`}
-                            >
-                              <div className="font-medium text-sm">{eth.name}</div>
-                              <div className="text-[10px] opacity-70">{eth.desc}</div>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                    ) : null}
                     <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                   </>
                 ) : mode === 'age_transform' ? (
@@ -1014,6 +1115,14 @@ const App: React.FC = () => {
                     />
                     <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                   </>
+                ) : mode === 'beauty' ? (
+                  <>
+                    <BeautyControls
+                      params={beautyParams}
+                      onChange={setBeautyParams}
+                    />
+                    <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
+                  </>
                 ) : mode === 'group_photo' ? (
                   <>
                     <GroupPhotoControls
@@ -1030,7 +1139,7 @@ const App: React.FC = () => {
                     />
                     <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                   </>
-                ) : (
+                ) : mode === 'fashion' ? (
                   <>
                     {/* Fashion Studio Mode Controls */}
                     <div className="mb-8">
@@ -1041,14 +1150,64 @@ const App: React.FC = () => {
                       <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                     </div>
                   </>
+                ) : mode === 'game_style' ? (
+                  <>
+                    {/* Game Style Mode Controls */}
+                    <div className="mb-8">
+                      <GameStyleControls
+                        params={gameStyleParams}
+                        onChange={setGameStyleParams}
+                      />
+                      <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
+                    </div>
+                  </>
+                ) : mode === 'image_modification' ? (
+                  <>
+                    {/* Image Modification Mode Controls */}
+                    <div className="mb-8">
+                      <ImageModControls
+                        params={imageModParams}
+                        onChange={setImageModParams}
+                      />
+                      <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
+                    </div>
+                  </>
+                ) : mode === 'dragon_ball' ? (
+                  <>
+                    <div className="mb-8">
+                      <DragonBallCardControls
+                        params={dragonBallParams}
+                        onChange={setDragonBallParams}
+                      />
+                    </div>
+                  </>
+                ) : mode === 'object_decomposition' ? (
+                  <>
+                    <ObjectDecompositionControls
+                      params={objectDecompositionParams}
+                      onChange={setObjectDecompositionParams}
+                    />
+                    <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
+                  </>
+                ) : (
+                  <>
+                    {/* Character Edit Mode Controls */}
+                    <div className="mb-8">
+                      <CharacterEditControls
+                        params={characterEditParams}
+                        onChange={setCharacterEditParams}
+                      />
+                      <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
+                    </div>
+                  </>
                 )}
 
                 {/* Generate Button */}
                 <button
                   onClick={handleGenerate}
-                  disabled={isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && !referenceImage) || (mode === 'faceswap' && !targetImage) || (mode === 'style_copy' && !styleCopyParams.styleImage)}
+                  disabled={isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && mode !== 'dragon_ball' && mode !== 'object_decomposition' && !referenceImage) || (mode === 'faceswap' && !targetImage) || (mode === 'style_copy' && !styleCopyParams.styleImage)}
                   className={`w-full py-4 rounded-xl font-bold text-lg shadow-xl flex items-center justify-center transition-all transform active:scale-[0.98]
-                    ${isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && !referenceImage) || (mode === 'faceswap' && !targetImage) || (mode === 'style_copy' && !styleCopyParams.styleImage)
+                    ${isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && mode !== 'dragon_ball' && mode !== 'object_decomposition' && !referenceImage) || (mode === 'faceswap' && !targetImage) || (mode === 'style_copy' && !styleCopyParams.styleImage)
                       ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
                       : 'bg-gradient-to-r from-brand-600 to-purple-600 hover:from-brand-500 hover:to-purple-500 text-white shadow-brand-500/25 hover:shadow-brand-500/40'}
                   `}
@@ -1059,11 +1218,11 @@ const App: React.FC = () => {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      {mode === 'portrait' ? 'Generating...' : mode === 'faceswap' ? 'Swapping Face...' : mode === 'age_transform' ? 'Transforming Age...' : mode === 'hairstyle' ? 'Changing Hairstyle...' : mode === 'tattoo' ? 'Creating Tattoo Preview...' : mode === 'photography' ? 'Generating Photo...' : mode === 'pose_transfer' ? 'Transferring Pose...' : mode === 'scene_gen' ? 'Generating Scene...' : mode === 'travel' ? 'Traveling...' : mode === 'style_copy' ? 'Analyzing & Generating...' : 'Converting...'}
+                      {mode === 'portrait' ? 'Generating...' : mode === 'faceswap' ? 'Swapping Face...' : mode === 'age_transform' ? 'Transforming Age...' : mode === 'hairstyle' ? 'Changing Hairstyle...' : mode === 'tattoo' ? 'Creating Tattoo Preview...' : mode === 'photography' ? 'Generating Photo...' : mode === 'pose_transfer' ? 'Transferring Pose...' : mode === 'scene_gen' ? 'Generating Scene...' : mode === 'travel' ? 'Traveling...' : mode === 'style_copy' ? 'Analyzing & Generating...' : mode === 'character_edit' ? 'Editing Character...' : mode === 'dragon_ball' ? 'Summoning...' : 'Converting...'}
                     </>
                   ) : (
                     <>
-                      <span className="mr-2">✨</span> {mode === 'portrait' ? 'Generate Portrait' : mode === 'faceswap' ? 'Swap Face' : mode === 'style_transfer' ? 'Convert Style' : mode === 'age_transform' ? 'Transform Age' : mode === 'hairstyle' ? 'Change Hairstyle' : mode === 'tattoo' ? 'Preview Tattoo' : mode === 'photography' ? 'Generate Photo' : mode === 'pose_transfer' ? 'Transfer Pose' : mode === 'scene_gen' ? 'Generate Scene' : mode === 'free_mode' ? 'Creative Generate' : mode === 'travel' ? 'Start Travel' : mode === 'triptych' ? 'Generate Triptych' : mode === 'pet_merch' ? 'Generate Merch' : mode === 'product_food' ? 'Generate Product' : mode === 'group_photo' ? 'Generate Group Photo' : mode === 'style_copy' ? 'Copy Style' : 'Create Look'}
+                      <span className="mr-2">✨</span> {mode === 'portrait' ? 'Generate Portrait' : mode === 'faceswap' ? 'Swap Face' : mode === 'style_transfer' ? 'Convert Style' : mode === 'age_transform' ? 'Transform Age' : mode === 'hairstyle' ? 'Change Hairstyle' : mode === 'tattoo' ? 'Preview Tattoo' : mode === 'photography' ? 'Generate Photo' : mode === 'pose_transfer' ? 'Transfer Pose' : mode === 'scene_gen' ? 'Generate Scene' : mode === 'free_mode' ? 'Creative Generate' : mode === 'travel' ? 'Start Travel' : mode === 'triptych' ? 'Generate Triptych' : mode === 'pet_merch' ? 'Generate Merch' : mode === 'product_food' ? 'Generate Product' : mode === 'group_photo' ? 'Generate Group Photo' : mode === 'style_copy' ? 'Copy Style' : mode === 'character_edit' ? 'Edit Character' : mode === 'dragon_ball' ? 'Draw Card' : 'Create Look'}
                     </>
                   )}
                 </button>
@@ -1088,13 +1247,13 @@ const App: React.FC = () => {
 
                 <div className="flex-1 flex items-center justify-center p-6 z-10 relative">
                   {generatedImage ? (
-                    <div className="relative group w-full h-full flex items-center justify-center">
+                    <div className="relative group inline-block max-w-full max-h-full">
                       <img
                         src={generatedImage}
                         alt="Result"
-                        className="max-w-full max-h-[700px] rounded-lg shadow-2xl object-contain"
+                        className="block max-w-full max-h-[700px] rounded-lg shadow-2xl object-contain"
                       />
-                      <div className="absolute bottom-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="absolute bottom-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
                         <a
                           href={generatedImage}
                           download={`portrait-genius-${Date.now()}.png`}
@@ -1106,6 +1265,12 @@ const App: React.FC = () => {
                           Download
                         </a>
                       </div>
+
+                      {mode === 'dragon_ball' && dragonBallParams.characterId && (
+                        <div className="absolute inset-0 pointer-events-none rounded-lg overflow-hidden">
+                          {/* Overlay removed as it is now composited into the image */}
+                        </div>
+                      )}
                     </div>
                   ) : isGenerating ? (
                     <div className="text-center space-y-4">
@@ -1146,7 +1311,11 @@ const App: React.FC = () => {
                                             ? 'Create professional product and food photography with perfect lighting.'
                                             : mode === 'figure'
                                               ? 'Turn your character into a high-quality 1/7 scale commercial figure.'
-                                              : 'Upload a face and design your perfect outfit.'}
+                                              : mode === 'character_edit'
+                                                ? 'Upload a character and modify their expression, pose, or style.'
+                                                : mode === 'dragon_ball'
+                                                  ? 'Click "Draw Card" to summon a random Dragon Ball character!'
+                                                  : 'Upload a face and design your perfect outfit.'}
                       </p>
                     </div>
                   )}

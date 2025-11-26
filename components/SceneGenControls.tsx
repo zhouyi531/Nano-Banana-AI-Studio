@@ -27,7 +27,7 @@ export const SceneGenControls: React.FC<SceneGenControlsProps> = ({
         const template = SCENE_TEMPLATES.find(t => t.id === templateId);
         if (template) {
             setSelectedTemplate(templateId);
-            onChange({ ...sceneGenParams, ...template.params });
+            onChange({ ...sceneGenParams, ...template.params, selectedTemplateId: templateId });
         }
     };
 
@@ -85,8 +85,8 @@ export const SceneGenControls: React.FC<SceneGenControlsProps> = ({
                             key={template.id}
                             onClick={() => handleTemplateSelect(template.id)}
                             className={`p-2 rounded-lg text-xs transition-all ${selectedTemplate === template.id
-                                    ? 'bg-brand-600 text-white'
-                                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                                ? 'bg-brand-600 text-white'
+                                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                                 }`}
                         >
                             {template.name}
@@ -95,6 +95,33 @@ export const SceneGenControls: React.FC<SceneGenControlsProps> = ({
                 </div>
             </div>
 
+            {/* Doodle Bombing Background Selector */}
+            {selectedTemplate === 'doodle_bombing' && (
+                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700 animate-fadeIn">
+                    <h3 className="text-sm font-medium text-slate-300 mb-3">🎨 选择背景 (Background)</h3>
+                    <div className="grid grid-cols-2 gap-2">
+                        {[
+                            { id: 'graffiti_alley', label: '涂鸦巷 (Graffiti Alley)' },
+                            { id: 'neon_city', label: '霓虹城市 (Neon City)' },
+                            { id: 'white_studio', label: '白色影棚 (White Studio)' },
+                            { id: 'abstract_pop', label: '波普抽象 (Abstract Pop)' },
+                            { id: 'skate_park', label: '滑板公园 (Skate Park)' }
+                        ].map((bg) => (
+                            <button
+                                key={bg.id}
+                                onClick={() => onChange({ ...sceneGenParams, customProps: bg.id })}
+                                className={`p-2 rounded-lg text-xs transition-all ${sceneGenParams.customProps === bg.id
+                                    ? 'bg-purple-600 text-white shadow-md'
+                                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                                    }`}
+                            >
+                                {bg.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             {/* Tabs */}
             <div className="flex gap-2 border-b border-slate-700 pb-2 overflow-x-auto">
                 {tabs.map((tab) => (
@@ -102,8 +129,8 @@ export const SceneGenControls: React.FC<SceneGenControlsProps> = ({
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id as any)}
                         className={`px-3 py-2 rounded-t-lg text-xs font-medium whitespace-nowrap transition-all ${activeTab === tab.id
-                                ? 'bg-brand-600 text-white'
-                                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                            ? 'bg-brand-600 text-white'
+                            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
                             }`}
                     >
                         <span className="mr-1">{tab.icon}</span>
@@ -277,8 +304,8 @@ export const SceneGenControls: React.FC<SceneGenControlsProps> = ({
                                         key={prop.id}
                                         onClick={() => handlePropsToggle(prop.id)}
                                         className={`px-3 py-2 rounded-lg text-xs transition-all ${sceneGenParams.props?.includes(prop.id)
-                                                ? 'bg-brand-600 text-white'
-                                                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                                            ? 'bg-brand-600 text-white'
+                                            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                                             }`}
                                     >
                                         {prop.label}

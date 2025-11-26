@@ -3,15 +3,15 @@ import React, { useState, useRef } from 'react';
 interface ImageUploaderProps {
   id: string;
   label: string;
-  onImageSelect: (base64: string) => void;
+  onImageSelect: (base64: string | null) => void;
   selectedImage: string | null;
   helpText?: string;
 }
 
-export const ImageUploader: React.FC<ImageUploaderProps> = ({ 
-  id, 
-  label, 
-  onImageSelect, 
+export const ImageUploader: React.FC<ImageUploaderProps> = ({
+  id,
+  label,
+  onImageSelect,
   selectedImage,
   helpText = "PNG, JPG up to 10MB"
 }) => {
@@ -54,6 +54,14 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     }
   };
 
+  const handleRemove = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onImageSelect(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   return (
     <div className="w-full mb-6">
       <label className="block text-sm font-medium text-slate-300 mb-2">
@@ -72,14 +80,23 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
       >
         {selectedImage ? (
           <>
-            <img 
-              src={selectedImage} 
-              alt="Upload Preview" 
-              className="w-full h-full object-contain z-10 p-2" 
+            <img
+              src={selectedImage}
+              alt="Upload Preview"
+              className="w-full h-full object-contain z-10 p-2"
             />
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20 text-white font-medium">
               Click to Change
             </div>
+            <button
+              onClick={handleRemove}
+              className="absolute top-2 right-2 z-30 bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-full shadow-lg transition-transform hover:scale-110"
+              title="Remove image"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </>
         ) : (
           <div className="text-center p-4">

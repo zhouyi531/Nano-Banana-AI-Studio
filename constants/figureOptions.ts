@@ -35,6 +35,17 @@ Face details: The facial features (mouth/eyes/details) must be fully 3D sculpted
 Lighting: clean product photography look, minimal soft shadows.
 Style: vinyl-toy aesthetic with a mix of matte + glossy accents depending on costume.
 Composition: 3/4 product shot view, full box visible. The entire packaging box must be fully visible inside the frame with a clean margin around all edges.`
+    },
+    {
+        id: 'plush_toy',
+        name: 'Plush Toy (毛绒玩具)',
+        description: 'Soft, 3D fluffy object with hyperrealistic fur',
+        prompt: `Create a 3D Q-version (chibi) full-body plush toy figure based on the reference image.
+CRITICAL REQUIREMENTS:
+1. FACE: The face MUST remain SMOOTH and REALISTIC (like a high-quality vinyl toy or doll face). **DO NOT** cover the face in fur. Preserve the facial identity and expression from the reference exactly.
+2. BODY: Transform the character's body and clothing into a soft, 3D fluffy object fully covered in hyperrealistic fur with natural texture.
+3. COMPOSITION: Generate a **FULL BODY** figure, even if the reference image is a close-up or half-body.
+4. AESTHETICS: Soft shadows, clean directional lighting. Keep the subject centered and gently floating on a clean light-gray background. The final result should feel modern, tactile, playful, and surreal.`
     }
 ];
 

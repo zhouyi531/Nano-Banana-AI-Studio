@@ -1,3 +1,4 @@
+
 import { AspectRatio } from '../../types';
 
 export interface GenerationContext {
@@ -28,6 +29,11 @@ export interface GenerationContext {
     beautyParams?: any;
     groupPhotoParams?: any;
     styleCopyParams?: any;
+    characterEditParams?: any;
+    gameStyleParams?: any;
+    imageModParams?: any;
+    dragonBallParams?: any;
+    objectDecompositionParams?: any;
 }
 
 export interface GenerationStrategy {
