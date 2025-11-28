@@ -29,6 +29,7 @@ import { DoodleBombingStrategy } from "./strategies/doodleBombingStrategy";
 import { OOTDStrategy } from "./strategies/ootdStrategy";
 import { LiteracyCardStrategy } from "./strategies/literacyCardStrategy";
 import { CharacterDesignStrategy } from "./strategies/characterDesignStrategy";
+import { PoseTransferStrategy } from "./strategies/poseTransferStrategy";
 
 declare const process: any;
 
@@ -83,6 +84,7 @@ const strategies: Record<string, GenerationStrategy> = {
   'ootd': new OOTDStrategy(),
   'literacy_card': new LiteracyCardStrategy(),
   'character_design': new CharacterDesignStrategy(),
+  'pose_transfer': new PoseTransferStrategy(),
 };
 
 export const generatePortrait = async (

@@ -251,7 +251,7 @@ const App: React.FC = () => {
 
   const fetchHistory = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/history');
+      const response = await fetch('/api/history');
       if (response.ok) {
         const data = await response.json();
         // Prepend server URL to image paths if they are relative
@@ -403,7 +403,7 @@ const App: React.FC = () => {
       // Save to local server
       let savedImageUrl = finalImageUrl;
       try {
-        const response = await fetch('http://localhost:3001/api/save-image', {
+        const response = await fetch('/api/save-image', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1116,7 +1116,7 @@ const App: React.FC = () => {
                       <PoseControls
                         poseParams={poseParams}
                         onChange={setPoseParams}
-                        onPoseReferenceChange={(img) => setTargetImage(img)}
+                        onPoseReferenceChange={() => { }}
                       />
                       <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
                     </div>
@@ -1328,9 +1328,9 @@ const App: React.FC = () => {
                 {/* Generate Button */}
                 <button
                   onClick={handleGenerate}
-                  disabled={isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && mode !== 'dragon_ball' && mode !== 'object_decomposition' && mode !== 'doodle_bombing' && mode !== 'ootd' && mode !== 'literacy_card' && mode !== 'character_design' && !referenceImage) || (mode === 'faceswap' && !targetImage) || (mode === 'style_copy' && !styleCopyParams.styleImage)}
+                  disabled={isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && mode !== 'dragon_ball' && mode !== 'object_decomposition' && mode !== 'doodle_bombing' && mode !== 'ootd' && mode !== 'literacy_card' && mode !== 'character_design' && mode !== 'pose_transfer' && !referenceImage) || (mode === 'faceswap' && !targetImage) || (mode === 'style_copy' && !styleCopyParams.styleImage) || (mode === 'pose_transfer' && !poseParams.poseReferenceImage && !poseParams.selectedPreset)}
                   className={`w-full py-4 rounded-xl font-bold text-lg shadow-xl flex items-center justify-center transition-all transform active:scale-[0.98]
-                    ${isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && mode !== 'dragon_ball' && mode !== 'object_decomposition' && mode !== 'doodle_bombing' && mode !== 'ootd' && mode !== 'literacy_card' && mode !== 'character_design' && !referenceImage) || (mode === 'faceswap' && !targetImage) || (mode === 'style_copy' && !styleCopyParams.styleImage)
+                    ${isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && mode !== 'dragon_ball' && mode !== 'object_decomposition' && mode !== 'doodle_bombing' && mode !== 'ootd' && mode !== 'literacy_card' && mode !== 'character_design' && mode !== 'pose_transfer' && !referenceImage) || (mode === 'faceswap' && !targetImage) || (mode === 'style_copy' && !styleCopyParams.styleImage) || (mode === 'pose_transfer' && !poseParams.poseReferenceImage && !poseParams.selectedPreset)
                       ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
                       : 'bg-gradient-to-r from-brand-600 to-purple-600 hover:from-brand-500 hover:to-purple-500 text-white shadow-brand-500/25 hover:shadow-brand-500/40'}
                   `}

@@ -88,11 +88,13 @@ export const PoseControls: React.FC<PoseControlsProps> = ({
                     </div>
                 ) : (
                     <div className="relative group">
-                        <img
-                            src={poseParams.poseReferenceImage}
-                            alt="Pose reference"
-                            className="w-full h-64 object-contain bg-slate-800 rounded-lg"
-                        />
+                        {poseParams.poseReferenceImage && poseParams.poseReferenceImage.startsWith('data:image') && (
+                            <img
+                                src={poseParams.poseReferenceImage}
+                                alt="Pose reference"
+                                className="w-full h-64 object-contain bg-slate-800 rounded-lg"
+                            />
+                        )}
                         <button
                             onClick={handleClearPoseImage}
                             className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity"
@@ -116,8 +118,8 @@ export const PoseControls: React.FC<PoseControlsProps> = ({
                                     key={category.id}
                                     onClick={() => setSelectedCategory(category.id)}
                                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${selectedCategory === category.id
-                                            ? 'bg-brand-600 text-white'
-                                            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                                        ? 'bg-brand-600 text-white'
+                                        : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                                         }`}
                                 >
                                     {category.label}
@@ -134,8 +136,8 @@ export const PoseControls: React.FC<PoseControlsProps> = ({
                                         key={pose.id}
                                         onClick={() => handlePresetSelect(pose.id)}
                                         className={`group relative border rounded-lg overflow-hidden transition-all ${isSelected
-                                                ? 'border-brand-500 ring-2 ring-brand-500/50'
-                                                : 'border-slate-600 hover:border-brand-400'
+                                            ? 'border-brand-500 ring-2 ring-brand-500/50'
+                                            : 'border-slate-600 hover:border-brand-400'
                                             }`}
                                     >
                                         {/* Pose Preview Image - Placeholder for now */}

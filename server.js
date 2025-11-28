@@ -13,6 +13,7 @@ const PORT = 3001;
 // Middleware
 app.use(cors());
 app.use(express.json({ limit: '50mb' })); // Increase limit for Base64 images
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public'))); // Serve static files
 
 

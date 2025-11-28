@@ -26,21 +26,17 @@ export class BeautyStrategy implements GenerationStrategy {
         const uniquePrompts = [...new Set(selectedPrompts)];
 
         const beautyPrompt = `
-      Task: Portrait Beauty Retouching - Natural & Realistic
-
-      Reference Image: The attached image shows the person to be retouched.
-
-      Base Style: Nano Banana style, Street Snap x Natural Light.
-
+      Task: Portrait Beauty Retouching - Enhance the subject based on the instructions below.
+      
+      Constraints:
+      1. IDENTITY CONSISTENCY: You MUST preserve the facial features, identity, and likeness of the person in the reference image. The generated face must look exactly like the person provided.
+      2. NATURAL LOOK: The result should look like a high-end camera shot with natural lighting. Avoid plastic or over-smoothed skin unless specified.
+      3. RESOLUTION: High resolution, extremely detailed, long edge approx 2048px quality.
+      
       Retouching Instructions:
-      ${uniquePrompts.map((p, index) => `${index + 1}. ${p}`).join('\n')}
-
-      CRITICAL Constraints:
-      1. IDENTITY PRESERVATION: The person's facial features and identity MUST remain EXACTLY the same.
-      2. NATURAL LOOK: Avoid over-processing. The result should look like a high-end camera shot with natural lighting.
-      3. TEXTURE: Maintain skin texture where appropriate (as per instructions).
-      4. LIGHTING: Keep the original lighting atmosphere unless specified otherwise.
-      5. OUTPUT: High-quality, photorealistic portrait.
+      ${uniquePrompts.length > 0 ? uniquePrompts.map((p, index) => `${index + 1}. ${p}`).join('\n') : 'Apply general beauty enhancement: clear skin, bright eyes, natural lighting.'}
+      
+      Ensure the lighting and composition matches the requested style while keeping the subject's identity intact.
     `;
 
         return [refImagePart, { text: beautyPrompt }].filter(part => part !== null);

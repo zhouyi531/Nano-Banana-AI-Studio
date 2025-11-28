@@ -65,6 +65,10 @@ export const FreeModeControls: React.FC<FreeModeControlsProps> = ({
         {
             label: "Face + Outfit + Bg",
             prompt: "The person from [Image 1] wearing the outfit from [Image 2] in the background of [Image 3]."
+        },
+        {
+            label: "Poster Style",
+            prompt: "把 [Image 1]的风格变成 [Image 2]的风格，人物替换成 [Image 2]的人物"
         }
     ];
 

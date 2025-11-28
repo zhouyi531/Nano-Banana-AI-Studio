@@ -29,6 +29,8 @@ export const GameStyleControls: React.FC<GameStyleControlsProps> = ({
         { id: 'gba', name: 'GBA风格', englishName: 'GBA STYLE', keywords: '掌机色彩, 明亮柔和, 日式RPG' },
         { id: 'lowpoly', name: '低多边形', englishName: 'LOW POLY STYLE', keywords: '几何简约, 棱角分明, PS1质感' },
         { id: 'voxel', name: '体素风格', englishName: 'VOXEL ART STYLE', keywords: '3D像素, Minecraft感, 积木世界' },
+        { id: 'minecraft', name: '我的世界', englishName: 'MINECRAFT STYLE', keywords: '方块构建, 像素纹理, 积木世界' },
+        { id: 'lego', name: '乐高风格', englishName: 'LEGO STYLE', keywords: '塑料积木, 拼插玩具, 乐高人仔' },
         { id: 'vaporwave', name: '蒸汽波', englishName: 'VAPORWAVE STYLE', keywords: '80s怀旧, 霓虹粉紫, 网格山脉' },
         { id: 'y2k', name: 'Y2K美学', englishName: 'Y2K AESTHETIC', keywords: '千禧未来, 金属质感, 科技乐观' },
         { id: 'synthwave', name: '合成器波', englishName: 'SYNTHWAVE STYLE', keywords: '复古未来, 日落渐变, 跑车剪影' },

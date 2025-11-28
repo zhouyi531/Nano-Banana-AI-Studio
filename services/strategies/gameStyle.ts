@@ -20,14 +20,14 @@ export class GameStyleStrategy implements GenerationStrategy {
             },
         };
 
-        const prompt = `Task: 把图1风格转换为[${selectedStyle}],特点是[${keywords}]
+        const prompt = `Task: Change the style of the reference image to [${selectedStyle}], characterized by [${keywords}].
     ${customPrompt ? `Additional Details: ${customPrompt}` : ''}
 
-    Instructions:
-    1. Keep the person's facial features recognizable.
-    2. Adapt their clothing and appearance to fit the ${selectedStyle} aesthetic.
-    3. Generate a background consistent with the game style.
-    4. Maintain high quality and artistic coherence.
+    CRITICAL CONSTRAINTS:
+    1. COMPOSITION PRESERVATION: You MUST preserve the original composition, pose, and placement of all elements. Do NOT change the scene layout.
+    2. ELEMENT PRESERVATION: Keep all objects and elements from the original image. Only change their rendering style.
+    3. IDENTITY PRESERVATION: Keep the person's facial features recognizable.
+    4. STYLE ADAPTATION: Apply the ${selectedStyle} aesthetic to textures, lighting, and shading ONLY.
     5. Aspect Ratio: ${ratio}
     `;
 
