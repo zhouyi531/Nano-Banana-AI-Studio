@@ -69,6 +69,17 @@ export const FreeModeControls: React.FC<FreeModeControlsProps> = ({
         {
             label: "Poster Style",
             prompt: "把 [Image 1]的风格变成 [Image 2]的风格，人物替换成 [Image 2]的人物"
+        },
+        {
+            label: "OOTD Flat Lay",
+            prompt: `Generate a picture of the clothing worn by the person in  [Image 1], laid out separately on a bed with white sheets.
+Keep the color, style, and details of each clothing piece exactly as in the uploaded image.
+Include all pieces (top, bottom, shoes, accessories if any) arranged neatly but separated. also imagine the underwear suits the character and the outfits. All pieces should look like they were worn and just been took off.
+Natural lighting, high resolution, realistic shadows, top-down view.`
+        },
+        {
+            label: "Poster Style 2",
+            prompt: "把 [Image 1]人物替换成 [Image 2]的人物"
         }
     ];
 

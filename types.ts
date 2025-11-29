@@ -26,7 +26,8 @@ export type AppMode =
   | 'doodle_bombing'
   | 'ootd'
   | 'literacy_card'
-  | 'character_design';
+  | 'character_design'
+  | 'city_guide';
 
 export enum AspectRatio {
   Ratio_1_1 = '1:1',
@@ -290,5 +291,9 @@ export interface LiteracyCardParams {
 }
 
 export interface CharacterDesignParams {
+  customPrompt?: string;
+}
+
+export interface CityGuideParams {
   customPrompt?: string;
 }

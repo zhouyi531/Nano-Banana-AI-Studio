@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => {
   console.log('API_KEY loaded:', !!env.API_KEY);
   return {
     server: {
-      port: 3000,
+      port: 3002,
       host: '0.0.0.0',
       proxy: {
         '/api': {

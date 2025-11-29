@@ -42,7 +42,9 @@ import {
   OOTDParams,
   LiteracyCardParams,
   CharacterDesignParams,
-  ObjectDecompositionParams
+
+  ObjectDecompositionParams,
+  CityGuideParams
 } from '../types';
 import { FashionControls } from './FashionControls';
 import { AgeControls } from './AgeControls';
@@ -62,7 +64,9 @@ import { ObjectDecompositionControls } from './ObjectDecompositionControls';
 import { DoodleBombingControls } from './DoodleBombingControls';
 import { OOTDControls } from './OOTDControls';
 import { LiteracyCardControls } from './LiteracyCardControls';
+
 import CharacterDesignControls from './CharacterDesignControls';
+import { CityGuideControls } from './CityGuideControls';
 import { DRAGON_BALL_CHARACTERS } from '../constants/dragonBallData';
 import { compositeDragonBallCard } from '../utils/dragonBallCompositor';
 import { ASPECT_RATIOS } from '../constants';
@@ -243,6 +247,9 @@ const App: React.FC = () => {
   const [characterDesignParams, setCharacterDesignParams] = useState<CharacterDesignParams>({
     customPrompt: ''
   });
+  const [cityGuideParams, setCityGuideParams] = useState<CityGuideParams>({
+    customPrompt: ''
+  });
 
   // Load history from server on mount
   useEffect(() => {
@@ -284,6 +291,9 @@ const App: React.FC = () => {
     // Optionally restore other settings
     setMode(item.mode);
     setPrompt(item.prompt);
+    if (item.mode === 'free_mode') {
+      setFreeModeParams(prev => ({ ...prev, prompt: item.prompt }));
+    }
     if (item.referenceImage) setReferenceImage(item.referenceImage);
     if (item.targetImage) setTargetImage(item.targetImage);
     if (item.aspectRatio) setAspectRatio(item.aspectRatio);
@@ -292,8 +302,13 @@ const App: React.FC = () => {
   const handleGenerate = async () => {
     setError(null);
 
-    if (!referenceImage && mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && mode !== 'dragon_ball' && mode !== 'object_decomposition' && mode !== 'doodle_bombing' && mode !== 'ootd' && mode !== 'literacy_card') {
+    if (!referenceImage && mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && mode !== 'dragon_ball' && mode !== 'object_decomposition' && mode !== 'doodle_bombing' && mode !== 'ootd' && mode !== 'literacy_card' && mode !== 'city_guide') {
       setError("Please upload a reference face.");
+      return;
+    }
+
+    if (mode === 'city_guide' && !referenceImage) {
+      setError("Please upload a reference image for City Girl Guide.");
       return;
     }
 
@@ -344,10 +359,16 @@ const App: React.FC = () => {
       setDragonBallParams(currentDragonBallParams);
     }
 
+    // Determine the effective prompt for saving and generation
+    let effectivePrompt = prompt;
+    if (mode === 'free_mode') {
+      effectivePrompt = freeModeParams.prompt;
+    }
+
     try {
       const resultUrl = await generatePortrait(
         referenceImage,
-        prompt,
+        effectivePrompt,
         aspectRatio,
         mode,
         targetImage || undefined,
@@ -381,7 +402,9 @@ const App: React.FC = () => {
         doodleBombingParams,
         ootdParams,
         literacyCardParams,
-        characterDesignParams
+
+        characterDesignParams,
+        cityGuideParams
       );
       let finalImageUrl = resultUrl;
 
@@ -411,7 +434,7 @@ const App: React.FC = () => {
           body: JSON.stringify({
             image: resultUrl,
             timestamp: Date.now(),
-            prompt,
+            prompt: effectivePrompt,
             mode,
             aspectRatio,
             referenceImage: referenceImage || undefined,
@@ -441,7 +464,9 @@ const App: React.FC = () => {
             objectDecompositionParams,
             doodleBombingParams,
             ootdParams,
-            literacyCardParams
+
+            literacyCardParams,
+            cityGuideParams
           }),
         });
 
@@ -898,6 +923,18 @@ const App: React.FC = () => {
                       <span className="text-xs">角色设定集</span>
                     </div>
                   </button>
+                  <button
+                    onClick={() => { setMode('city_guide'); setError(null); }}
+                    className={`py-2.5 px-3 rounded-lg transition-all duration-200 ${mode === 'city_guide'
+                      ? 'bg-brand-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span className="text-base mb-0.5">🏙️</span>
+                      <span className="text-xs">城市女子图鉴</span>
+                    </div>
+                  </button>
                 </div>
               </div>
 
@@ -1330,7 +1367,7 @@ const App: React.FC = () => {
                   onClick={handleGenerate}
                   disabled={isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && mode !== 'dragon_ball' && mode !== 'object_decomposition' && mode !== 'doodle_bombing' && mode !== 'ootd' && mode !== 'literacy_card' && mode !== 'character_design' && mode !== 'pose_transfer' && !referenceImage) || (mode === 'faceswap' && !targetImage) || (mode === 'style_copy' && !styleCopyParams.styleImage) || (mode === 'pose_transfer' && !poseParams.poseReferenceImage && !poseParams.selectedPreset)}
                   className={`w-full py-4 rounded-xl font-bold text-lg shadow-xl flex items-center justify-center transition-all transform active:scale-[0.98]
-                    ${isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && mode !== 'dragon_ball' && mode !== 'object_decomposition' && mode !== 'doodle_bombing' && mode !== 'ootd' && mode !== 'literacy_card' && mode !== 'character_design' && mode !== 'pose_transfer' && !referenceImage) || (mode === 'faceswap' && !targetImage) || (mode === 'style_copy' && !styleCopyParams.styleImage) || (mode === 'pose_transfer' && !poseParams.poseReferenceImage && !poseParams.selectedPreset)
+                    ${isGenerating || (mode !== 'scene_gen' && mode !== 'free_mode' && mode !== 'travel' && mode !== 'group_photo' && mode !== 'dragon_ball' && mode !== 'object_decomposition' && mode !== 'doodle_bombing' && mode !== 'ootd' && mode !== 'literacy_card' && mode !== 'character_design' && mode !== 'pose_transfer' && mode !== 'city_guide' && !referenceImage) || (mode === 'faceswap' && !targetImage) || (mode === 'style_copy' && !styleCopyParams.styleImage) || (mode === 'pose_transfer' && !poseParams.poseReferenceImage && !poseParams.selectedPreset)
                       ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
                       : 'bg-gradient-to-r from-brand-600 to-purple-600 hover:from-brand-500 hover:to-purple-500 text-white shadow-brand-500/25 hover:shadow-brand-500/40'}
                   `}
@@ -1341,11 +1378,11 @@ const App: React.FC = () => {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      {mode === 'portrait' ? 'Generating...' : mode === 'faceswap' ? 'Swapping Face...' : mode === 'age_transform' ? 'Transforming Age...' : mode === 'hairstyle' ? 'Changing Hairstyle...' : mode === 'tattoo' ? 'Creating Tattoo Preview...' : mode === 'photography' ? 'Generating Photo...' : mode === 'pose_transfer' ? 'Transferring Pose...' : mode === 'scene_gen' ? 'Generating Scene...' : mode === 'travel' ? 'Traveling...' : mode === 'style_copy' ? 'Analyzing & Generating...' : mode === 'character_edit' ? 'Editing Character...' : mode === 'dragon_ball' ? 'Summoning...' : 'Converting...'}
+                      {mode === 'portrait' ? 'Generating...' : mode === 'faceswap' ? 'Swapping Face...' : mode === 'age_transform' ? 'Transforming Age...' : mode === 'hairstyle' ? 'Changing Hairstyle...' : mode === 'tattoo' ? 'Creating Tattoo Preview...' : mode === 'photography' ? 'Generating Photo...' : mode === 'pose_transfer' ? 'Transferring Pose...' : mode === 'scene_gen' ? 'Generating Scene...' : mode === 'travel' ? 'Traveling...' : mode === 'style_copy' ? 'Analyzing & Generating...' : mode === 'character_edit' ? 'Editing Character...' : mode === 'dragon_ball' ? 'Summoning...' : mode === 'city_guide' ? 'Creating Guide...' : 'Converting...'}
                     </>
                   ) : (
                     <>
-                      <span className="mr-2">✨</span> {mode === 'portrait' ? 'Generate Portrait' : mode === 'faceswap' ? 'Swap Face' : mode === 'style_transfer' ? 'Convert Style' : mode === 'age_transform' ? 'Transform Age' : mode === 'hairstyle' ? 'Change Hairstyle' : mode === 'tattoo' ? 'Preview Tattoo' : mode === 'photography' ? 'Generate Photo' : mode === 'pose_transfer' ? 'Transfer Pose' : mode === 'scene_gen' ? 'Generate Scene' : mode === 'free_mode' ? 'Creative Generate' : mode === 'travel' ? 'Start Travel' : mode === 'triptych' ? 'Generate Triptych' : mode === 'pet_merch' ? 'Generate Merch' : mode === 'product_food' ? 'Generate Product' : mode === 'group_photo' ? 'Generate Group Photo' : mode === 'style_copy' ? 'Copy Style' : mode === 'character_edit' ? 'Edit Character' : mode === 'dragon_ball' ? 'Draw Card' : 'Create Look'}
+                      <span className="mr-2">✨</span> {mode === 'portrait' ? 'Generate Portrait' : mode === 'faceswap' ? 'Swap Face' : mode === 'style_transfer' ? 'Convert Style' : mode === 'age_transform' ? 'Transform Age' : mode === 'hairstyle' ? 'Change Hairstyle' : mode === 'tattoo' ? 'Preview Tattoo' : mode === 'photography' ? 'Generate Photo' : mode === 'pose_transfer' ? 'Transfer Pose' : mode === 'scene_gen' ? 'Generate Scene' : mode === 'free_mode' ? 'Creative Generate' : mode === 'travel' ? 'Start Travel' : mode === 'triptych' ? 'Generate Triptych' : mode === 'pet_merch' ? 'Generate Merch' : mode === 'product_food' ? 'Generate Product' : mode === 'group_photo' ? 'Generate Group Photo' : mode === 'style_copy' ? 'Copy Style' : mode === 'character_edit' ? 'Edit Character' : mode === 'dragon_ball' ? 'Draw Card' : mode === 'city_guide' ? 'Create City Guide' : 'Create Look'}
                     </>
                   )}
                 </button>
@@ -1438,7 +1475,9 @@ const App: React.FC = () => {
                                                 ? 'Upload a character and modify their expression, pose, or style.'
                                                 : mode === 'dragon_ball'
                                                   ? 'Click "Draw Card" to summon a random Dragon Ball character!'
-                                                  : 'Upload a face and design your perfect outfit.'}
+                                                  : mode === 'city_guide'
+                                                    ? 'Upload a photo to create a city girl guide.'
+                                                    : 'Upload a face and design your perfect outfit.'}
                       </p>
                     </div>
                   )}

@@ -1,5 +1,5 @@
 import { GoogleGenAI, Modality } from "@google/genai";
-import { AspectRatio, AppMode, GroupPhotoParams, CharacterEditParams, GameStyleParams, ImageModParams, DoodleBombingParams, OOTDParams, LiteracyCardParams, CharacterDesignParams } from "../types";
+import { AspectRatio, AppMode, GroupPhotoParams, CharacterEditParams, GameStyleParams, ImageModParams, DoodleBombingParams, OOTDParams, LiteracyCardParams, CharacterDesignParams, CityGuideParams } from "../types";
 import { GenerationContext, GenerationStrategy } from "./strategies/types";
 import { FaceSwapStrategy } from "./strategies/faceSwap";
 import { StyleTransferStrategy } from "./strategies/styleTransfer";
@@ -30,6 +30,7 @@ import { OOTDStrategy } from "./strategies/ootdStrategy";
 import { LiteracyCardStrategy } from "./strategies/literacyCardStrategy";
 import { CharacterDesignStrategy } from "./strategies/characterDesignStrategy";
 import { PoseTransferStrategy } from "./strategies/poseTransferStrategy";
+import { CityGuideStrategy } from "./strategies/cityGuide";
 
 declare const process: any;
 
@@ -85,6 +86,7 @@ const strategies: Record<string, GenerationStrategy> = {
   'literacy_card': new LiteracyCardStrategy(),
   'character_design': new CharacterDesignStrategy(),
   'pose_transfer': new PoseTransferStrategy(),
+  'city_guide': new CityGuideStrategy(),
 };
 
 export const generatePortrait = async (
@@ -123,7 +125,8 @@ export const generatePortrait = async (
   doodleBombingParams?: DoodleBombingParams,
   ootdParams?: OOTDParams,
   literacyCardParams?: LiteracyCardParams,
-  characterDesignParams?: CharacterDesignParams
+  characterDesignParams?: CharacterDesignParams,
+  cityGuideParams?: CityGuideParams
 ): Promise<string> => {
   const client = getClient();
 
@@ -161,7 +164,8 @@ export const generatePortrait = async (
     doodleBombingParams,
     ootdParams,
     literacyCardParams,
-    characterDesignParams
+    characterDesignParams,
+    cityGuideParams
   };
 
   const strategy = strategies[mode];
